@@ -32,6 +32,7 @@ Interactive web component for testing fonts. Built around how [Fountain](https:/
 
 ## Roadmap
 
+- [ ] Module imports
 - [ ] Better base design for controls using slots
 - [ ] CSS vars for custom design
 - [ ] Simplify further, 1400 lines of code :grimacing:
