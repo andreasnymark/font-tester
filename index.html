@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Font Tester</title>
+</head>
+<body>
+	<font-tester data-requires-all-weights="true" editable="false" font-family="helvetica" controls="text-controls,font-size,opentype,font-style,line-height,letter-spacing" default-font-size="100px" default-line-height="1.2" default-letter-spacing="-0.05em">
+		<font-style name="Helvetica Light" family="helvetica" weight="100" style=""></font-style>
+		<font-style name="Helvetica Regular" family="helvetica" weight="500" style=""></font-style>
+		<font-style name="Helvetica Black" family="helvetica" weight="900" style=""></font-style>
+
+		<opentype-feature code="dlig" name="Discretionary Ligatures"></opentype-feature>
+		<opentype-feature code="smcp" name="Small Caps"></opentype-feature>
+		<opentype-feature code="kern" name="Kerning" default></opentype-feature>
+
+		<sample-text>This is by default visible, and not in the select.</sample-text><!-- Default text, add name parameter to add in select -->
+		<sample-text name="ABCabc">ABCabc</sample-text>
+		<sample-text name="The Quick">The Quick Brown Fox</sample-text>
+	</font-tester>
+	<script type="module" src="./src/index.js"></script>
+</body>
+</html>
