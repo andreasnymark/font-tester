@@ -10,28 +10,17 @@ export class FontDisplay extends FontTesterBase {
     this.attachShadow({ mode: 'open' });
   }
 
-  connectedCallback() {
-    this.render();
-    this.loadFont();
+  static get observedAttributes() {
+    return ['font-family'];
   }
 
-  /**
-   * Load the font and show loading state
-   * @returns {Promise<void>}
-   */
-  async loadFont() {
-    const fontFamily = this.getAttribute('font-family') || 'system-ui';
+  connectedCallback() {
+    this.render();
+  }
 
-    try {
-      this.classList.add('loading');
-      await document.fonts.load(`16px "${fontFamily}"`);
-      this.classList.add('loaded');
-      this.classList.remove('loading');
-    } catch (err) {
-      console.error('Font loading failed:', err);
-      this.classList.add('error');
-      this.classList.remove('loading');
-    }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    this.style.setProperty('--display-font-family', newValue || 'system-ui');
   }
 
   render() {
@@ -39,54 +28,56 @@ export class FontDisplay extends FontTesterBase {
       <style>
         :host {
           display: block;
+          /* Display area styling */
           --display-bg: #ffffff;
-          --display-border: #e0e0e0;
+          --display-border-color: #e0e0e0;
+          --display-border-width: 1px;
           --display-border-radius: 8px;
           --display-padding: 40px;
+          --display-min-height: 200px;
+
+          /* Text styling */
           --text-color: #000000;
-          --edit-border: #ccc;
-          --edit-border-active: #333;
-          --font-family: system-ui;
+          --text-font-size: 48px;
+          --text-font-weight: 400;
+          --text-line-height: 1.4;
+          --text-letter-spacing: 0em;
+          --display-font-family: system-ui;
+
+          /* Status states */
+          --loading-color: #999;
+          --error-color: #f00;
         }
 
         .display-area {
           background: var(--display-bg);
-          border: 1px solid var(--display-border);
+          border: var(--display-border-width) solid var(--display-border-color);
           border-radius: var(--display-border-radius);
           padding: var(--display-padding);
-          min-height: 200px;
+          min-height: var(--display-min-height);
           position: relative;
         }
 
         .display-text {
-          font-family: var(--font-family);
-          font-size: 48px;
-          font-weight: 400;
-          line-height: 1.4;
-          letter-spacing: 0em;
+          font-family: var(--display-font-family);
+          font-size: var(--text-font-size);
+          font-weight: var(--text-font-weight);
+          line-height: var(--text-line-height);
+          letter-spacing: var(--text-letter-spacing);
           color: var(--text-color);
           outline: none;
           word-wrap: break-word;
+          white-space: pre-wrap;
           font-feature-settings: normal;
         }
 
-        .display-text[contenteditable="true"] {
-          border: 2px dashed var(--edit-border);
-          padding: 10px;
-          border-radius: 4px;
-        }
-
-        .display-text[contenteditable="true"]:focus {
-          border-color: var(--edit-border-active);
-        }
-
-        :host(.loading) .display-area::after {
+:host(.loading) .display-area::after {
           content: 'Loading font...';
           position: absolute;
           top: 10px;
           right: 10px;
           font-size: 12px;
-          color: #999;
+          color: var(--loading-color);
         }
 
         :host(.error) .display-area::after {
@@ -95,23 +86,37 @@ export class FontDisplay extends FontTesterBase {
           top: 10px;
           right: 10px;
           font-size: 12px;
-          color: #f00;
+          color: var(--error-color);
+        }
+
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border-width: 0;
         }
       </style>
 
-      <div class="display-area">
+      <div class="display-area" part="display-area">
         <div class="display-text"
-             contenteditable="false"
+             part="display-text"
+             contenteditable="true"
              spellcheck="false"
              role="textbox"
              aria-label="Font preview text"
              aria-multiline="true"></div>
+        <div class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
       </div>
     `;
 
-    // Set font family via CSS custom property (safe from injection)
-    const fontFamily = this.getAttribute('font-family') || 'system-ui';
-    this.style.setProperty('--font-family', fontFamily);
+    // Don't set font-family here - let font-loader.js set it when in viewport
+    // This prevents fonts from downloading before they're needed
+    this.style.setProperty('--display-font-family', this.getAttribute('font-family') || 'system-ui');
 
     // Don't set any text here - let SampleTextSelector set the initial text
   }
@@ -137,7 +142,6 @@ export class FontDisplay extends FontTesterBase {
     const element = this.textElement;
     if (element) {
       element.textContent = text;
-      this.emit('text-changed', { text });
     }
   }
 
@@ -150,18 +154,6 @@ export class FontDisplay extends FontTesterBase {
   }
 
   /**
-   * Toggle editable state
-   * @param {boolean} editable - Whether text should be editable
-   */
-  setEditable(editable) {
-    const element = this.textElement;
-    if (element) {
-      element.setAttribute('contenteditable', editable);
-      element.setAttribute('aria-readonly', !editable);
-    }
-  }
-
-  /**
    * Apply a style property to the text
    * @param {string} property - CSS property name
    * @param {string} value - CSS property value
@@ -170,6 +162,27 @@ export class FontDisplay extends FontTesterBase {
     const element = this.textElement;
     if (element) {
       element.style[property] = value;
+
+      // Announce style changes to screen readers for major changes
+      const announceable = ['fontSize', 'fontWeight', 'fontFamily'];
+      if (announceable.includes(property)) {
+        this.announceChange(`${property} changed to ${value}`);
+      }
+    }
+  }
+
+  /**
+   * Announce a change to screen readers
+   * @param {string} message - Message to announce
+   */
+  announceChange(message) {
+    const liveRegion = this.query('.sr-only[role="status"]');
+    if (liveRegion) {
+      liveRegion.textContent = message;
+      // Clear after announcement
+      setTimeout(() => {
+        liveRegion.textContent = '';
+      }, 1000);
     }
   }
 }

@@ -107,10 +107,13 @@ export class OpentypeFeatures extends FontTesterBase {
           --feature-bg-hover: #f5f5f5;
           --feature-bg-active: #333;
           --feature-border: #e0e0e0;
+          --feature-border-width: 1px;
           --feature-border-radius: 4px;
           --feature-text: #000;
           --feature-text-active: #fff;
           --feature-gap: 12px;
+          --feature-code-font-size: 11px;
+          --feature-code-opacity: 0.6;
         }
 
         .features-grid {
@@ -120,44 +123,39 @@ export class OpentypeFeatures extends FontTesterBase {
         }
 
         .feature-toggle {
+          appearance: none;
+          -webkit-appearance: none;
           display: flex;
           align-items: center;
           gap: 8px;
           padding: 8px 12px;
-          border: 1px solid var(--feature-border);
+          border: var(--feature-border-width) solid var(--feature-border);
           border-radius: var(--feature-border-radius);
           background: var(--feature-bg);
+          color: var(--feature-text);
           cursor: pointer;
           transition: all 0.2s;
-          user-select: none;
+          text-align: left;
+          font-family: inherit;
         }
 
         .feature-toggle:hover {
           background: var(--feature-bg-hover);
         }
 
-        .feature-toggle:focus-within {
+        .feature-toggle:focus-visible {
           outline: 2px solid var(--feature-bg-active);
           outline-offset: 2px;
         }
 
-        .feature-toggle.active {
+        .feature-toggle[aria-pressed="true"] {
           background: var(--feature-bg-active);
           color: var(--feature-text-active);
           border-color: var(--feature-bg-active);
         }
 
-        .feature-toggle.unsupported {
+        .feature-toggle:disabled {
           opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .feature-toggle input {
-          margin: 0;
-          cursor: pointer;
-        }
-
-        .feature-toggle.unsupported input {
           cursor: not-allowed;
         }
 
@@ -174,12 +172,12 @@ export class OpentypeFeatures extends FontTesterBase {
         }
 
         .feature-code {
-          font-size: 11px;
-          opacity: 0.6;
+          font-size: var(--feature-code-font-size);
+          opacity: var(--feature-code-opacity);
           font-family: monospace;
         }
 
-        .feature-toggle.active .feature-code {
+        .feature-toggle[aria-pressed="true"] .feature-code {
           opacity: 0.8;
         }
 
@@ -189,7 +187,7 @@ export class OpentypeFeatures extends FontTesterBase {
         }
       </style>
 
-      <div class="features-grid" id="featuresGrid" role="group" aria-label="OpenType features"></div>
+      <div class="features-grid" id="featuresGrid" part="features-grid" role="group" aria-label="OpenType features"></div>
     `;
 
     this.renderFeatures();
@@ -203,20 +201,13 @@ export class OpentypeFeatures extends FontTesterBase {
     if (!grid) return;
 
     this.features.forEach(feature => {
-      const toggle = document.createElement('div');
-      toggle.className = 'feature-toggle';
-      if (feature.default) toggle.classList.add('active');
-      if (feature.supported === false) toggle.classList.add('unsupported');
-      toggle.setAttribute('role', 'checkbox');
-      toggle.setAttribute('aria-checked', feature.default);
-      toggle.setAttribute('tabindex', '0');
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = feature.default;
-      checkbox.dataset.code = feature.code;
-      checkbox.setAttribute('aria-label', feature.name);
-      checkbox.disabled = feature.supported === false;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'feature-toggle';
+      btn.setAttribute('part', 'feature-toggle');
+      btn.setAttribute('aria-pressed', feature.default ? 'true' : 'false');
+      btn.dataset.code = feature.code;
+      if (feature.supported === false) btn.disabled = true;
 
       const label = document.createElement('div');
       label.className = 'feature-label';
@@ -239,9 +230,8 @@ export class OpentypeFeatures extends FontTesterBase {
         label.appendChild(badge);
       }
 
-      toggle.appendChild(checkbox);
-      toggle.appendChild(label);
-      grid.appendChild(toggle);
+      btn.appendChild(label);
+      grid.appendChild(btn);
     });
   }
 
@@ -250,42 +240,25 @@ export class OpentypeFeatures extends FontTesterBase {
     if (!grid) return;
 
     const clickHandler = (e) => {
-      const toggle = e.target.closest('.feature-toggle');
-      if (!toggle || toggle.classList.contains('unsupported')) return;
+      const btn = e.target.closest('.feature-toggle');
+      if (!btn) return;
 
-      const checkbox = toggle.querySelector('input');
-      if (!checkbox) return;
-
-      if (e.target !== checkbox) {
-        checkbox.checked = !checkbox.checked;
-      }
-      toggle.classList.toggle('active', checkbox.checked);
-      toggle.setAttribute('aria-checked', checkbox.checked);
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
 
       this.emitFeatureSettings();
     };
 
-    const keyHandler = (e) => {
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        const toggle = e.target.closest('.feature-toggle');
-        if (toggle) {
-          toggle.click();
-        }
-      }
-    };
-
     this.addTrackedListener(grid, 'click', clickHandler);
-    this.addTrackedListener(grid, 'keydown', keyHandler);
   }
 
   /**
    * Emit current feature settings as CSS font-feature-settings string
    */
   emitFeatureSettings() {
-    const checkboxes = this.queryAll('input[type="checkbox"]');
-    const settings = Array.from(checkboxes)
-      .map(cb => `"${cb.dataset.code}" ${cb.checked ? 1 : 0}`)
+    const buttons = this.queryAll('button[data-code]');
+    const settings = Array.from(buttons)
+      .map(btn => `"${btn.dataset.code}" ${btn.getAttribute('aria-pressed') === 'true' ? 1 : 0}`)
       .join(', ');
 
     this.emit('features-change', { settings });

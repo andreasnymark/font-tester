@@ -12,6 +12,7 @@ export class StyleControls extends FontTesterBase {
   static DEFAULT_CONTROLS = {
     'font-size': {
       id: 'fontSize',
+      labelKey: 'styleControls.fontSizeLabel',
       label: 'Font Size',
       min: 12,
       max: 200,
@@ -22,6 +23,7 @@ export class StyleControls extends FontTesterBase {
     },
     'line-height': {
       id: 'lineHeight',
+      labelKey: 'styleControls.lineHeightLabel',
       label: 'Line Height',
       min: 0.8,
       max: 2.5,
@@ -32,6 +34,7 @@ export class StyleControls extends FontTesterBase {
     },
     'letter-spacing': {
       id: 'letterSpacing',
+      labelKey: 'styleControls.letterSpacingLabel',
       label: 'Letter Spacing',
       min: -0.1,
       max: 0.5,
@@ -50,7 +53,7 @@ export class StyleControls extends FontTesterBase {
   }
 
   static get observedAttributes() {
-    return ['show', 'default-font-size', 'default-line-height', 'default-letter-spacing'];
+    return ['show'];
   }
 
   connectedCallback() {
@@ -65,7 +68,7 @@ export class StyleControls extends FontTesterBase {
    */
   applyCustomDefaults() {
     // Font size
-    const fontSize = this.getAttribute('default-font-size');
+    const fontSize = this.getAttribute('font-size');
     if (fontSize && this.availableControls['font-size']) {
       const numericValue = parseFloat(fontSize);
       if (!isNaN(numericValue)) {
@@ -74,7 +77,7 @@ export class StyleControls extends FontTesterBase {
     }
 
     // Line height
-    const lineHeight = this.getAttribute('default-line-height');
+    const lineHeight = this.getAttribute('line-height');
     if (lineHeight && this.availableControls['line-height']) {
       const numericValue = parseFloat(lineHeight);
       if (!isNaN(numericValue)) {
@@ -83,7 +86,7 @@ export class StyleControls extends FontTesterBase {
     }
 
     // Letter spacing
-    const letterSpacing = this.getAttribute('default-letter-spacing');
+    const letterSpacing = this.getAttribute('letter-spacing');
     if (letterSpacing && this.availableControls['letter-spacing']) {
       const numericValue = parseFloat(letterSpacing);
       if (!isNaN(numericValue)) {
@@ -102,9 +105,9 @@ export class StyleControls extends FontTesterBase {
     visibleControls.forEach(([key, control]) => {
       // Skip emitting if a custom default was provided for this control
       const hasCustomDefault =
-        (key === 'font-size' && this.hasAttribute('default-font-size')) ||
-        (key === 'line-height' && this.hasAttribute('default-line-height')) ||
-        (key === 'letter-spacing' && this.hasAttribute('default-letter-spacing'));
+        (key === 'font-size' && this.hasAttribute('font-size')) ||
+        (key === 'line-height' && this.hasAttribute('line-height')) ||
+        (key === 'letter-spacing' && this.hasAttribute('letter-spacing'));
 
       if (!hasCustomDefault) {
         this.emit('style-change', {
@@ -271,26 +274,31 @@ export class StyleControls extends FontTesterBase {
         }
       </style>
 
-      <div class="controls">
-        ${visibleControls.map(([key, control]) => `
-          <div class="control-row" data-control="${key}">
-            <label for="${control.id}">${this.sanitizeHTML(control.label)}</label>
+      <div class="controls" part="controls">
+        ${visibleControls.map(([key, control]) => {
+          const label = this.t(control.labelKey, control.label);
+          return `
+          <div class="control-row" data-control="${key}" part="control-row ${key}-row">
+            <label for="${control.id}" part="label ${key}-label">${this.sanitizeHTML(label)}</label>
             <input type="range"
+                   part="slider ${key}-slider"
                    id="${control.id}"
                    min="${control.min}"
                    max="${control.max}"
                    value="${control.value}"
                    step="${control.step}"
-                   aria-label="${this.sanitizeHTML(control.label)}"
+                   aria-label="${this.sanitizeHTML(label)}"
                    aria-valuemin="${control.min}"
                    aria-valuemax="${control.max}"
                    aria-valuenow="${control.value}"
                    role="slider">
             <span class="value-display"
+                  part="value-display ${key}-value"
                   id="${control.id}Value"
                   aria-live="polite">${control.value}${control.unit}</span>
           </div>
-        `).join('')}
+        `;
+        }).join('')}
       </div>
     `;
   }

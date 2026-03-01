@@ -9,6 +9,7 @@ export class FontStyleSelector extends FontTesterBase {
     super();
     this.attachShadow({ mode: 'open' });
     this.styles = [];
+    this.fontTester = null;
   }
 
   connectedCallback() {
@@ -36,6 +37,9 @@ export class FontStyleSelector extends FontTesterBase {
         break;
       }
     }
+
+    // Store reference to font-tester
+    this.fontTester = fontTester;
 
     // Collect font-style elements from font-tester's light DOM
     if (fontTester) {
@@ -65,6 +69,22 @@ export class FontStyleSelector extends FontTesterBase {
     // If no styles defined, component won't render
   }
 
+  /**
+   * Determine which style should be selected based on font-tester's font-family attribute
+   */
+  getSelectedStyle() {
+    if (!this.fontTester) return this.styles[0];
+
+    const fontFamily = this.fontTester.getAttribute('font-family')?.replace(/^['"]|['"]$/g, '');
+    
+    if (fontFamily) {
+      const matchingStyle = this.styles.find(s => s.family === fontFamily);
+      if (matchingStyle) return matchingStyle;
+    }
+
+    return this.styles.find(s => s.default) || this.styles[0];
+  }
+
   render() {
     // Don't render if no styles available
     if (this.styles.length === 0) {
@@ -72,7 +92,7 @@ export class FontStyleSelector extends FontTesterBase {
       return;
     }
 
-    const defaultStyle = this.styles.find(s => s.default) || this.styles[0];
+    const selectedStyle = this.getSelectedStyle();
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -80,9 +100,14 @@ export class FontStyleSelector extends FontTesterBase {
           display: inline-block;
           --select-bg: white;
           --select-border: #e0e0e0;
+          --select-border-width: 1px;
           --select-border-hover: #333;
           --select-border-radius: 4px;
           --select-padding: 8px 12px;
+          --select-font-family: inherit;
+          --select-font-size: 13px;
+          --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+          --select-arrow-position: right 12px center;
         }
 
         .control-wrapper {
@@ -98,11 +123,19 @@ export class FontStyleSelector extends FontTesterBase {
         }
 
         select {
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
           padding: var(--select-padding);
-          border: 1px solid var(--select-border);
+          padding-right: 36px;
+          border: var(--select-border-width) solid var(--select-border);
           border-radius: var(--select-border-radius);
           background: var(--select-bg);
-          font-size: 13px;
+          background-image: var(--select-arrow);
+          background-repeat: no-repeat;
+          background-position: var(--select-arrow-position);
+          font-family: var(--select-font-family);
+          font-size: var(--select-font-size);
           cursor: pointer;
           min-width: 150px;
         }
@@ -117,14 +150,17 @@ export class FontStyleSelector extends FontTesterBase {
         }
       </style>
 
-      <div class="control-wrapper">
-        <label for="fontStyleSelect">Style</label>
-        <select id="fontStyleSelect" aria-label="Select font style">
-          ${this.styles.map(style => `
-            <option value="${style.weight},${style.style},${style.family || ''}" ${style.default ? 'selected' : ''}>
+      <div class="control-wrapper" part="wrapper">
+        <label for="fontStyleSelect" part="label">${this.t('fontStyleSelector.label', 'Style')}</label>
+        <select id="fontStyleSelect" part="select" aria-label="${this.t('fontStyleSelector.ariaLabel', 'Select font style')}">
+          ${this.styles.map(style => {
+            const isSelected = style === selectedStyle;
+            return `
+            <option value="${style.weight},${style.style},${style.family || ''}" ${isSelected ? 'selected' : ''}>
               ${this.sanitizeHTML(style.name)}
             </option>
-          `).join('')}
+            `;
+          }).join('')}
         </select>
       </div>
     `;
@@ -155,28 +191,8 @@ export class FontStyleSelector extends FontTesterBase {
       };
       this.addTrackedListener(select, 'change', handler);
 
-      // Emit initial style
-      if (select.value) {
-        const [weight, style, family] = select.value.split(',');
-        requestAnimationFrame(() => {
-          // Emit font-family change first if family is specified
-          if (family) {
-            this.emit('style-change', {
-              property: 'fontFamily',
-              value: family
-            });
-          }
-
-          this.emit('style-change', {
-            property: 'fontWeight',
-            value: weight
-          });
-          this.emit('style-change', {
-            property: 'fontStyle',
-            value: style
-          });
-        });
-      }
+      // Don't emit initial style - let font-loader handle it when tester enters viewport
+      // This prevents fonts from loading before they're needed
     }
   }
 }

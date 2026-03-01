@@ -24,6 +24,7 @@ export class TextControls extends FontTesterBase {
           --control-bg-hover: #f5f5f5;
           --control-bg-active: #333;
           --control-border: #e0e0e0;
+          --control-border-width: 1px;
           --control-border-radius: 4px;
           --control-text: #000;
           --control-text-active: #fff;
@@ -38,7 +39,7 @@ export class TextControls extends FontTesterBase {
 
         button {
           padding: 8px 16px;
-          border: 1px solid var(--control-border);
+          border: var(--control-border-width) solid var(--control-border);
           border-radius: var(--control-border-radius);
           background: var(--control-bg);
           color: var(--control-text);
@@ -66,29 +67,57 @@ export class TextControls extends FontTesterBase {
           opacity: 0.5;
           cursor: not-allowed;
         }
+
+        .radio-group {
+          display: inline-flex;
+          gap: 0;
+        }
+
+        .radio-group button {
+          border-radius: 0;
+        }
+
+        .radio-group button:first-child {
+          border-top-left-radius: var(--control-border-radius);
+          border-bottom-left-radius: var(--control-border-radius);
+        }
+
+        .radio-group button:last-child {
+          border-top-right-radius: var(--control-border-radius);
+          border-bottom-right-radius: var(--control-border-radius);
+        }
+
+        .radio-group button:not(:last-child) {
+          border-right: none;
+        }
       </style>
 
-      <div class="controls" role="toolbar" aria-label="Text controls">
-        <button id="editBtn" aria-pressed="false">Edit Text</button>
-        <button id="uppercaseBtn" aria-pressed="false">Uppercase</button>
+      <div class="controls" part="toolbar" role="toolbar" aria-label="${this.t('textControls.toolbarLabel', 'Text controls')}">
+        <button id="uppercaseBtn" part="button uppercase-button" aria-pressed="false" aria-label="${this.t('textControls.uppercaseAriaLabel', 'Toggle uppercase text')}">${this.t('textControls.uppercaseButton', 'Uppercase')}</button>
+
+        <div role="radiogroup" aria-label="${this.t('textControls.directionGroupLabel', 'Text direction')}" class="radio-group" part="radio-group direction-group">
+          <button id="ltrBtn" part="button radio-button ltr-button" role="radio" class="active" aria-checked="true" aria-label="${this.t('textControls.ltrAriaLabel', 'Left to right')}">${this.t('textControls.ltrButton', 'LTR')}</button>
+          <button id="rtlBtn" part="button radio-button rtl-button" role="radio" aria-checked="false" aria-label="${this.t('textControls.rtlAriaLabel', 'Right to left')}">${this.t('textControls.rtlButton', 'RTL')}</button>
+        </div>
+
+        <div role="radiogroup" aria-label="${this.t('textControls.alignmentGroupLabel', 'Text alignment')}" class="radio-group" part="radio-group alignment-group">
+          <button id="alignLeftBtn" part="button radio-button align-left-button" role="radio" class="active" aria-checked="true" aria-label="${this.t('textControls.alignLeftAriaLabel', 'Align text left')}">${this.t('textControls.alignLeftButton', 'Left')}</button>
+          <button id="alignCenterBtn" part="button radio-button align-center-button" role="radio" aria-checked="false" aria-label="${this.t('textControls.alignCenterAriaLabel', 'Align text center')}">${this.t('textControls.alignCenterButton', 'Center')}</button>
+          <button id="alignRightBtn" part="button radio-button align-right-button" role="radio" aria-checked="false" aria-label="${this.t('textControls.alignRightAriaLabel', 'Align text right')}">${this.t('textControls.alignRightButton', 'Right')}</button>
+        </div>
+
         <slot></slot>
       </div>
     `;
   }
 
   attachListeners() {
-    const editBtn = this.query('#editBtn');
     const uppercaseBtn = this.query('#uppercaseBtn');
-
-    if (editBtn) {
-      const handler = (e) => {
-        const btn = e.target;
-        const isActive = btn.classList.toggle('active');
-        btn.setAttribute('aria-pressed', isActive);
-        this.emit('edit-toggle', { editing: isActive });
-      };
-      this.addTrackedListener(editBtn, 'click', handler);
-    }
+    const ltrBtn = this.query('#ltrBtn');
+    const rtlBtn = this.query('#rtlBtn');
+    const alignLeftBtn = this.query('#alignLeftBtn');
+    const alignCenterBtn = this.query('#alignCenterBtn');
+    const alignRightBtn = this.query('#alignRightBtn');
 
     if (uppercaseBtn) {
       const handler = (e) => {
@@ -98,6 +127,63 @@ export class TextControls extends FontTesterBase {
         this.emit('text-transform-toggle', { uppercase: isActive });
       };
       this.addTrackedListener(uppercaseBtn, 'click', handler);
+    }
+
+    if (ltrBtn && rtlBtn) {
+      const ltrHandler = () => {
+        ltrBtn.classList.add('active');
+        rtlBtn.classList.remove('active');
+        ltrBtn.setAttribute('aria-checked', 'true');
+        rtlBtn.setAttribute('aria-checked', 'false');
+        this.emit('direction-change', { direction: 'ltr' });
+      };
+
+      const rtlHandler = () => {
+        rtlBtn.classList.add('active');
+        ltrBtn.classList.remove('active');
+        rtlBtn.setAttribute('aria-checked', 'true');
+        ltrBtn.setAttribute('aria-checked', 'false');
+        this.emit('direction-change', { direction: 'rtl' });
+      };
+
+      this.addTrackedListener(ltrBtn, 'click', ltrHandler);
+      this.addTrackedListener(rtlBtn, 'click', rtlHandler);
+    }
+
+    if (alignLeftBtn && alignCenterBtn && alignRightBtn) {
+      const alignLeftHandler = () => {
+        alignLeftBtn.classList.add('active');
+        alignCenterBtn.classList.remove('active');
+        alignRightBtn.classList.remove('active');
+        alignLeftBtn.setAttribute('aria-checked', 'true');
+        alignCenterBtn.setAttribute('aria-checked', 'false');
+        alignRightBtn.setAttribute('aria-checked', 'false');
+        this.emit('align-change', { align: 'left' });
+      };
+
+      const alignCenterHandler = () => {
+        alignCenterBtn.classList.add('active');
+        alignLeftBtn.classList.remove('active');
+        alignRightBtn.classList.remove('active');
+        alignCenterBtn.setAttribute('aria-checked', 'true');
+        alignLeftBtn.setAttribute('aria-checked', 'false');
+        alignRightBtn.setAttribute('aria-checked', 'false');
+        this.emit('align-change', { align: 'center' });
+      };
+
+      const alignRightHandler = () => {
+        alignRightBtn.classList.add('active');
+        alignLeftBtn.classList.remove('active');
+        alignCenterBtn.classList.remove('active');
+        alignRightBtn.setAttribute('aria-checked', 'true');
+        alignLeftBtn.setAttribute('aria-checked', 'false');
+        alignCenterBtn.setAttribute('aria-checked', 'false');
+        this.emit('align-change', { align: 'right' });
+      };
+
+      this.addTrackedListener(alignLeftBtn, 'click', alignLeftHandler);
+      this.addTrackedListener(alignCenterBtn, 'click', alignCenterHandler);
+      this.addTrackedListener(alignRightBtn, 'click', alignRightHandler);
     }
   }
 }

@@ -3,9 +3,143 @@
  * @extends HTMLElement
  */
 export class FontTesterBase extends HTMLElement {
+  static _translations = null;
+  static _translationsLoaded = false;
+  static _translationsPromise = null;
+
   constructor() {
     super();
     this._eventHandlers = new Map();
+  }
+
+  /**
+   * Initialize translations (call this before creating font-tester elements)
+   * Only needed when loading from external file
+   * @returns {Promise<void>}
+   */
+  static async initTranslations() {
+    if (!this._translationsPromise) {
+      this._translationsPromise = this.loadTranslations();
+    }
+    await this._translationsPromise;
+  }
+
+  /**
+   * Load translations from script#font-tester-i18n in document
+   * Supports both inline JSON and external file via data-src attribute
+   * @returns {Promise<Object>} Translations object
+   */
+  static async loadTranslations() {
+    if (this._translationsLoaded) {
+      return this._translations;
+    }
+
+    const scriptElement = document.getElementById('font-tester-i18n');
+    if (!scriptElement) {
+      console.warn('Translation script#font-tester-i18n not found');
+      this._translations = null;
+      this._translationsLoaded = true;
+      return this._translations;
+    }
+
+    // Check if loading from external file
+    const externalSrc = scriptElement.getAttribute('data-src');
+    if (externalSrc) {
+      try {
+        const response = await fetch(externalSrc);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this._translations = await response.json();
+      } catch (err) {
+        console.error('Failed to load font-tester translations from', externalSrc, err);
+        this._translations = null;
+      }
+    } else {
+      // Load from inline content
+      try {
+        this._translations = JSON.parse(scriptElement.textContent);
+      } catch (err) {
+        console.error('Failed to parse font-tester translations:', err);
+        this._translations = null;
+      }
+    }
+
+    this._translationsLoaded = true;
+    return this._translations;
+  }
+
+  /**
+   * Get current language from font-tester lang attribute or document
+   * @returns {string} Language code (e.g., 'en', 'sv')
+   */
+  getLanguage() {
+    // Try to find font-tester parent
+    let node = this.getRootNode();
+    let fontTester = null;
+
+    while (node) {
+      if (node.host) {
+        if (node.host.tagName === 'FONT-TESTER') {
+          fontTester = node.host;
+          break;
+        }
+        node = node.host.getRootNode();
+      } else {
+        break;
+      }
+    }
+
+    // Check font-tester lang attribute
+    if (fontTester && fontTester.hasAttribute('lang')) {
+      return fontTester.getAttribute('lang');
+    }
+
+    // Fall back to document lang or 'en'
+    return document.documentElement.lang || 'en';
+  }
+
+  /**
+   * Get translated string (synchronous)
+   * @param {string} key - Translation key (dot notation supported)
+   * @param {string} fallback - Fallback text if translation not found
+   * @returns {string} Translated text
+   */
+  t(key, fallback = '') {
+    // If translations are already loaded, use them
+    const translations = FontTesterBase._translations;
+
+    // If not loaded yet and no external file, try loading inline synchronously
+    if (!FontTesterBase._translationsLoaded) {
+      const scriptElement = document.getElementById('font-tester-i18n');
+      if (scriptElement && !scriptElement.getAttribute('data-src')) {
+        // Only load inline JSON synchronously
+        try {
+          FontTesterBase._translations = JSON.parse(scriptElement.textContent);
+          FontTesterBase._translationsLoaded = true;
+        } catch (err) {
+          console.error('Failed to parse inline translations:', err);
+        }
+      }
+    }
+
+    if (!FontTesterBase._translations) return fallback;
+
+    const lang = this.getLanguage();
+    const langTranslations = FontTesterBase._translations[lang] || FontTesterBase._translations['en'] || {};
+
+    // Support dot notation like 'buttons.edit'
+    const keys = key.split('.');
+    let value = langTranslations;
+    for (const k of keys) {
+      if (value && typeof value === 'object') {
+        value = value[k];
+      } else {
+        return fallback;
+      }
+    }
+
+    return typeof value === 'string' ? value : fallback;
   }
 
   /**
@@ -37,33 +171,6 @@ export class FontTesterBase extends HTMLElement {
    */
   queryAll(selector) {
     return this.shadowRoot?.querySelectorAll(selector) || [];
-  }
-
-  /**
-   * Debounce function calls
-   * @param {Function} func - Function to debounce
-   * @param {number} wait - Wait time in milliseconds
-   * @returns {Function} - Debounced function
-   */
-  debounce(func, wait) {
-    if (!this._debounceTimeouts) {
-      this._debounceTimeouts = new Set();
-    }
-
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      if (this._debounceTimeouts) {
-        this._debounceTimeouts.delete(timeout);
-      }
-      timeout = setTimeout(() => {
-        func.apply(this, args);
-        if (this._debounceTimeouts) {
-          this._debounceTimeouts.delete(timeout);
-        }
-      }, wait);
-      this._debounceTimeouts.add(timeout);
-    };
   }
 
   /**
@@ -112,11 +219,5 @@ export class FontTesterBase extends HTMLElement {
    */
   disconnectedCallback() {
     this.removeAllListeners();
-
-    // Clear all debounce timeouts
-    if (this._debounceTimeouts) {
-      this._debounceTimeouts.forEach(timeout => clearTimeout(timeout));
-      this._debounceTimeouts.clear();
-    }
   }
 }

@@ -15,25 +15,25 @@ export class FontTester extends FontTesterBase {
       lineHeight: '1.4',
       letterSpacing: '0em',
       text: 'The quick brown fox jumps over the lazy dog',
-      features: new Map(),
-      editing: false
+      features: new Map()
     };
     this._lastControls = null;
   }
 
   static get observedAttributes() {
-    return ['font-family', 'controls', 'editable', 'default-font-size', 'default-line-height', 'default-letter-spacing'];
+    return ['font-family', 'controls'];
   }
 
   connectedCallback() {
     this._lastControls = this.getAttribute('controls');
     this.render();
     this.attachListeners();
-    this.applyInitialEditable();
 
-    // Defer defaults until next frame to ensure child components are fully initialized
-    requestAnimationFrame(() => {
-      this.applyInitialDefaults();
+    // Wait for font-display to be defined before applying defaults
+    customElements.whenDefined('font-display').then(() => {
+      requestAnimationFrame(() => {
+        this.applyInitialDefaults();
+      });
     });
   }
 
@@ -42,66 +42,10 @@ export class FontTester extends FontTesterBase {
 
     const handlers = {
       'font-family': () => this.updateFontFamily(newValue),
-      'controls': () => this.updateControls(),
-      'editable': () => this.updateEditable(newValue)
+      'controls': () => this.updateControls()
     };
 
     handlers[name]?.();
-  }
-
-  /**
-   * Apply initial editable state
-   */
-  applyInitialEditable() {
-    const isEditable = this.hasAttribute('editable') &&
-                       this.getAttribute('editable') !== 'false';
-
-    const display = this.query('font-display');
-    if (display) {
-      display.setEditable(isEditable);
-      this.setState({ editing: isEditable });
-    }
-
-    // Sync the Edit Text button state if it exists
-    const textControls = this.query('text-controls');
-    if (textControls) {
-      const editBtn = textControls.shadowRoot?.querySelector('#editBtn');
-      if (editBtn) {
-        if (isEditable) {
-          editBtn.classList.add('active');
-        } else {
-          editBtn.classList.remove('active');
-        }
-        editBtn.setAttribute('aria-pressed', isEditable);
-      }
-    }
-  }
-
-  /**
-   * Update editable state
-   * @param {string} value - New editable value
-   */
-  updateEditable(value) {
-    const isEditable = value !== null && value !== 'false';
-    const display = this.query('font-display');
-    if (display) {
-      display.setEditable(isEditable);
-      this.setState({ editing: isEditable });
-    }
-
-    // Sync the Edit Text button state if it exists
-    const textControls = this.query('text-controls');
-    if (textControls) {
-      const editBtn = textControls.shadowRoot?.querySelector('#editBtn');
-      if (editBtn) {
-        if (isEditable) {
-          editBtn.classList.add('active');
-        } else {
-          editBtn.classList.remove('active');
-        }
-        editBtn.setAttribute('aria-pressed', isEditable);
-      }
-    }
   }
 
   /**
@@ -116,24 +60,38 @@ export class FontTester extends FontTesterBase {
     }
 
     // Apply font size default
-    const fontSize = this.getAttribute('default-font-size');
+    const fontSize = this.getAttribute('font-size');
     if (fontSize) {
       display.applyStyle('fontSize', fontSize);
       this.setState({ fontSize });
     }
 
     // Apply line height default
-    const lineHeight = this.getAttribute('default-line-height');
+    const lineHeight = this.getAttribute('line-height');
     if (lineHeight) {
       display.applyStyle('lineHeight', lineHeight);
       this.setState({ lineHeight });
     }
 
     // Apply letter spacing default
-    const letterSpacing = this.getAttribute('default-letter-spacing');
+    const letterSpacing = this.getAttribute('letter-spacing');
     if (letterSpacing) {
       display.applyStyle('letterSpacing', letterSpacing);
       this.setState({ letterSpacing });
+    }
+
+    // Apply text align default
+    const textAlign = this.getAttribute('text-align');
+    if (textAlign) {
+      display.applyStyle('textAlign', textAlign);
+      this.setState({ textAlign });
+    }
+
+    // Apply direction default
+    const direction = this.getAttribute('direction');
+    if (direction) {
+      display.applyStyle('direction', direction);
+      this.setState({ direction });
     }
   }
 
@@ -217,9 +175,27 @@ export class FontTester extends FontTesterBase {
           --container-padding: 20px;
           --section-gap: 30px;
           --divider-color: #e0e0e0;
+
+          /* Button (OpenType features trigger) */
+          --btn-bg: white;
+          --btn-bg-hover: #f5f5f5;
+          --btn-border-color: #e0e0e0;
+          --btn-border-radius: 4px;
+          --btn-color: #000;
+          --btn-font-size: 13px;
+
+          /* Dialog */
+          --dialog-border-color: #e0e0e0;
+          --dialog-border-radius: 8px;
+          --dialog-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          --dialog-backdrop-color: rgba(0, 0, 0, 0.3);
+          --dialog-header-border-color: #e0e0e0;
+          --dialog-close-color: #666;
         }
 
         .container {
+          display: flex;
+          flex-direction: column;
           max-width: var(--container-max-width);
           margin: 0 auto;
           padding: var(--container-padding);
@@ -233,42 +209,36 @@ export class FontTester extends FontTesterBase {
           display: none;
         }
 
-        .controls-section {
-          margin-top: 20px;
-          padding-top: 20px;
-          border-top: 1px solid var(--divider-color);
-        }
-
         .hidden {
           display: none;
         }
 
         .features-btn {
           padding: 8px 16px;
-          border: 1px solid #e0e0e0;
-          border-radius: 4px;
-          background: white;
-          color: #000;
+          border: 1px solid var(--btn-border-color);
+          border-radius: var(--btn-border-radius);
+          background: var(--btn-bg);
+          color: var(--btn-color);
           cursor: pointer;
-          font-size: 13px;
+          font-size: var(--btn-font-size);
           transition: all 0.2s;
         }
 
         .features-btn:hover {
-          background: #f5f5f5;
+          background: var(--btn-bg-hover);
         }
 
         .features-btn:focus {
-          outline: 2px solid #333;
+          outline: 2px solid var(--btn-border-color);
           outline-offset: 2px;
         }
 
         dialog {
-          border: 1px solid #e0e0e0;
-          border-radius: 8px;
+          border: 1px solid var(--dialog-border-color);
+          border-radius: var(--dialog-border-radius);
           padding: 0;
           max-width: 600px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: var(--dialog-shadow);
           z-index: 1000;
           position: fixed;
           top: 50%;
@@ -278,7 +248,7 @@ export class FontTester extends FontTesterBase {
         }
 
         dialog::backdrop {
-          background: rgba(0, 0, 0, 0.3);
+          background: var(--dialog-backdrop-color);
           z-index: 999;
         }
 
@@ -287,7 +257,7 @@ export class FontTester extends FontTesterBase {
           justify-content: space-between;
           align-items: center;
           padding: 20px;
-          border-bottom: 1px solid #e0e0e0;
+          border-bottom: 1px solid var(--dialog-header-border-color);
         }
 
         .dialog-header h3 {
@@ -302,13 +272,13 @@ export class FontTester extends FontTesterBase {
           font-size: 20px;
           cursor: pointer;
           padding: 4px 8px;
-          color: #666;
+          color: var(--dialog-close-color);
           border-radius: 4px;
         }
 
         .close-btn:hover {
-          background: #f5f5f5;
-          color: #000;
+          background: var(--btn-bg-hover);
+          color: var(--btn-color);
         }
 
         .dialog-content {
@@ -318,44 +288,44 @@ export class FontTester extends FontTesterBase {
 
       <div class="container">
         ${enabled.textControls ? `
-          <div class="section">
+          <div class="section" part="controls-section">
             <text-controls>
               <sample-text-selector></sample-text-selector>
               ${enabled.fontStyle ? '<font-style-selector></font-style-selector>' : ''}
-              ${enabled.opentype ? '<button id="openFeaturesBtn" type="button" class="features-btn">OpenType Features</button>' : ''}
+              ${enabled.opentype ? `<button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>` : ''}
             </text-controls>
           </div>
         ` : enabled.fontStyle ? `
-          <div class="section">
+          <div class="section" part="controls-section">
             <font-style-selector></font-style-selector>
-            ${enabled.opentype ? '<button id="openFeaturesBtn" type="button" class="features-btn">OpenType Features</button>' : ''}
+            ${enabled.opentype ? `<button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>` : ''}
           </div>
         ` : enabled.opentype ? `
-          <div class="section">
-            <button id="openFeaturesBtn" type="button" class="features-btn">OpenType Features</button>
+          <div class="section" part="controls-section">
+            <button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>
           </div>
         ` : ''}
 
-        <div class="section">
-          <font-display font-family="${fontFamily}"></font-display>
-        </div>
-
         ${enabled.styleControls.length > 0 ? `
-          <div class="section">
+          <div class="section" part="style-controls-section">
             <style-controls
               show="${enabled.styleControls.join(', ')}"
-              ${this.hasAttribute('default-font-size') ? `default-font-size="${this.sanitizeHTML(this.getAttribute('default-font-size'))}"` : ''}
-              ${this.hasAttribute('default-line-height') ? `default-line-height="${this.sanitizeHTML(this.getAttribute('default-line-height'))}"` : ''}
-              ${this.hasAttribute('default-letter-spacing') ? `default-letter-spacing="${this.sanitizeHTML(this.getAttribute('default-letter-spacing'))}"` : ''}
+              ${this.hasAttribute('font-size') ? `font-size="${this.sanitizeHTML(this.getAttribute('font-size'))}"` : ''}
+              ${this.hasAttribute('line-height') ? `line-height="${this.sanitizeHTML(this.getAttribute('line-height'))}"` : ''}
+              ${this.hasAttribute('letter-spacing') ? `letter-spacing="${this.sanitizeHTML(this.getAttribute('letter-spacing'))}"` : ''}
             ></style-controls>
           </div>
         ` : ''}
 
+        <div class="section" part="display-section">
+          <font-display font-family="${fontFamily}"></font-display>
+        </div>
+
         ${enabled.opentype ? `
-          <dialog id="featuresDialog">
-            <div class="dialog-header">
-              <h3>OpenType Features</h3>
-              <button id="closeFeaturesBtn" type="button" class="close-btn">✕</button>
+          <dialog id="featuresDialog" part="dialog" aria-labelledby="dialogTitle">
+            <div class="dialog-header" part="dialog-header">
+              <h3 id="dialogTitle" part="dialog-title">${this.sanitizeHTML(this.t('fontTester.dialogTitle', 'OpenType Features'))}</h3>
+              <button id="closeFeaturesBtn" type="button" class="close-btn" part="close-button" aria-label="${this.sanitizeHTML(this.t('fontTester.closeDialogAriaLabel', 'Close dialog'))}">✕</button>
             </div>
             <div class="dialog-content">
               <opentype-features></opentype-features>
@@ -371,18 +341,24 @@ export class FontTester extends FontTesterBase {
     if (!display) return;
 
     // Handle text controls
-    const editToggleHandler = (e) => {
-      display.setEditable(e.detail.editing);
-      this.setState({ editing: e.detail.editing });
-    };
-    this.addTrackedListener(this.shadowRoot, 'edit-toggle', editToggleHandler);
-
     const textTransformToggleHandler = (e) => {
       const transformValue = e.detail.uppercase ? 'uppercase' : 'none';
       display.applyStyle('textTransform', transformValue);
       this.setState({ textTransform: transformValue });
     };
     this.addTrackedListener(this.shadowRoot, 'text-transform-toggle', textTransformToggleHandler);
+
+    const directionChangeHandler = (e) => {
+      display.applyStyle('direction', e.detail.direction);
+      this.setState({ direction: e.detail.direction });
+    };
+    this.addTrackedListener(this.shadowRoot, 'direction-change', directionChangeHandler);
+
+    const alignChangeHandler = (e) => {
+      display.applyStyle('textAlign', e.detail.align);
+      this.setState({ textAlign: e.detail.align });
+    };
+    this.addTrackedListener(this.shadowRoot, 'align-change', alignChangeHandler);
 
     // Handle sample text selection
     const sampleSelectedHandler = (e) => {
@@ -413,6 +389,11 @@ export class FontTester extends FontTesterBase {
     if (openFeaturesBtn && featuresDialog) {
       const openHandler = () => {
         featuresDialog.show(); // Use show() for modeless dialog
+
+        // Focus the close button for keyboard accessibility
+        requestAnimationFrame(() => {
+          closeFeaturesBtn?.focus();
+        });
       };
       this.addTrackedListener(openFeaturesBtn, 'click', openHandler);
     }
@@ -420,8 +401,17 @@ export class FontTester extends FontTesterBase {
     if (closeFeaturesBtn && featuresDialog) {
       const closeHandler = () => {
         featuresDialog.close();
+
+        // Return focus to the button that opened the dialog
+        openFeaturesBtn?.focus();
       };
       this.addTrackedListener(closeFeaturesBtn, 'click', closeHandler);
+
+      // Close on Escape key (native dialog already does this, but also return focus)
+      const dialogCloseHandler = () => {
+        openFeaturesBtn?.focus();
+      };
+      this.addTrackedListener(featuresDialog, 'close', dialogCloseHandler);
     }
   }
 }

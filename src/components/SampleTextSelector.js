@@ -34,6 +34,15 @@ export class SampleTextSelector extends FontTesterBase {
   }
 
   /**
+   * Process text to convert literal \n into actual newlines
+   * @param {string} text - Raw text from HTML
+   * @returns {string} Processed text with actual newlines
+   */
+  processText(text) {
+    return text.replace(/\\n/g, '\n');
+  }
+
+  /**
    * Collect sample texts from parent or use defaults
    */
   collectSamples() {
@@ -62,12 +71,12 @@ export class SampleTextSelector extends FontTesterBase {
 
       if (sampleElements.length > 0) {
         // First sample-text becomes the initial text (whether it has name or not)
-        this.initialText = sampleElements[0].textContent.trim();
+        this.initialText = this.processText(sampleElements[0].textContent.trim());
 
         // Only add samples with name attribute to the dropdown
         sampleElements.forEach(el => {
           const name = el.getAttribute('name');
-          const text = el.textContent.trim();
+          const text = this.processText(el.textContent.trim());
           if (name && text) {
             this.samples.set(name, text);
           }
@@ -121,17 +130,30 @@ export class SampleTextSelector extends FontTesterBase {
           display: inline-block;
           --select-bg: white;
           --select-border: #e0e0e0;
+          --select-border-width: 1px;
           --select-border-hover: #333;
           --select-border-radius: 4px;
           --select-padding: 8px 12px;
+          --select-font-family: inherit;
+          --select-font-size: 13px;
+          --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+          --select-arrow-position: right 12px center;
         }
 
         select {
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
           padding: var(--select-padding);
-          border: 1px solid var(--select-border);
+          padding-right: 36px;
+          border: var(--select-border-width) solid var(--select-border);
           border-radius: var(--select-border-radius);
           background: var(--select-bg);
-          font-size: 13px;
+          background-image: var(--select-arrow);
+          background-repeat: no-repeat;
+          background-position: var(--select-arrow-position);
+          font-family: var(--select-font-family);
+          font-size: var(--select-font-size);
           cursor: pointer;
           min-width: 150px;
         }
@@ -146,8 +168,8 @@ export class SampleTextSelector extends FontTesterBase {
         }
       </style>
 
-      <select aria-label="Select sample text">
-        <option value="">Sample Texts</option>
+      <select part="select" aria-label="${this.t('sampleTextSelector.ariaLabel', 'Select sample text')}">
+        <option value="">${this.t('sampleTextSelector.placeholder', 'Sample Texts')}</option>
         ${Array.from(this.samples.entries()).map(([name, text]) =>
           `<option value="${this.sanitizeHTML(name)}">${this.sanitizeHTML(name)}</option>`
         ).join('')}
