@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Tester i18n - External File Example</title>
+</head>
+<body>
+
+<h1>Font Tester with External Translations</h1>
+
+<!-- STEP 1: Reference external translation file with data-src -->
+<script id="font-tester-i18n" type="application/json" data-src="./font-tester-i18n-example.json"></script>
+
+<div id="en-container">
+  <h2>English Font Tester</h2>
+</div>
+
+<hr style="margin: 3rem 0;">
+
+<div id="sv-container">
+  <h2>Swedish Font Tester</h2>
+</div>
+
+<!--
+  STEP 2: Initialize translations, then insert font-tester elements.
+
+  With external JSON, font-tester elements must be inserted into the DOM
+  *after* initTranslations() resolves. Importing font-tester.min.js registers
+  the custom elements synchronously, so any elements already in the DOM would
+  connect and render before translations are available.
+-->
+<script type="module">
+  import { initTranslations } from './dist/font-tester.min.js';
+
+  await initTranslations();
+
+  document.getElementById('en-container').insertAdjacentHTML('beforeend', `
+    <font-tester lang="en" controls="text-controls,font-size,line-height,letter-spacing,font-style,opentype">
+      <font-style name="Regular" weight="400" style="normal" default></font-style>
+      <font-style name="Bold" weight="700" style="normal"></font-style>
+      <opentype-feature code="kern" name="Kerning" default></opentype-feature>
+      <opentype-feature code="liga" name="Ligatures"></opentype-feature>
+      <sample-text>The quick brown fox jumps over the lazy dog</sample-text>
+      <sample-text name="Pangram">Pack my box with five dozen liquor jugs</sample-text>
+    </font-tester>
+  `);
+
+  document.getElementById('sv-container').insertAdjacentHTML('beforeend', `
+    <font-tester lang="sv" controls="text-controls,font-size,line-height,letter-spacing,font-style,opentype">
+      <font-style name="Regular" weight="400" style="normal" default></font-style>
+      <font-style name="Bold" weight="700" style="normal"></font-style>
+      <opentype-feature code="kern" name="Kerning" default></opentype-feature>
+      <opentype-feature code="liga" name="Ligaturer"></opentype-feature>
+      <sample-text>Flygande bäckasiner söka hwila på mjuka tuvor</sample-text>
+      <sample-text name="Pangram">Yxskaftbud, ge vår WC-zonmö IQ-hjälp</sample-text>
+    </font-tester>
+  `);
+</script>
+
+</body>
+</html>

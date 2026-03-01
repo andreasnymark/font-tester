@@ -1,0 +1,78 @@
+{
+  "en": {
+    "textControls": {
+      "toolbarLabel": "Text controls",
+      "uppercaseButton": "Uppercase",
+      "uppercaseAriaLabel": "Toggle uppercase text",
+      "directionGroupLabel": "Text direction",
+      "ltrButton": "LTR",
+      "ltrAriaLabel": "Left to right",
+      "rtlButton": "RTL",
+      "rtlAriaLabel": "Right to left",
+      "alignmentGroupLabel": "Text alignment",
+      "alignLeftButton": "Left",
+      "alignLeftAriaLabel": "Align text left",
+      "alignCenterButton": "Center",
+      "alignCenterAriaLabel": "Align text center",
+      "alignRightButton": "Right",
+      "alignRightAriaLabel": "Align text right"
+    },
+    "fontTester": {
+      "openFeaturesButton": "OpenType Features",
+      "openFeaturesAriaLabel": "Open OpenType features dialog",
+      "dialogTitle": "OpenType Features",
+      "closeDialogAriaLabel": "Close dialog"
+    },
+    "sampleTextSelector": {
+      "ariaLabel": "Select sample text",
+      "placeholder": "Sample Texts"
+    },
+    "fontStyleSelector": {
+      "label": "Style",
+      "ariaLabel": "Select font style"
+    },
+    "styleControls": {
+      "fontSizeLabel": "Font Size",
+      "lineHeightLabel": "Line Height",
+      "letterSpacingLabel": "Letter Spacing"
+    }
+  },
+  "sv": {
+    "textControls": {
+      "toolbarLabel": "Textkontroller",
+      "uppercaseButton": "Versaler",
+      "uppercaseAriaLabel": "Växla versaler",
+      "directionGroupLabel": "Textriktning",
+      "ltrButton": "VTH",
+      "ltrAriaLabel": "Vänster till höger",
+      "rtlButton": "HTV",
+      "rtlAriaLabel": "Höger till vänster",
+      "alignmentGroupLabel": "Textjustering",
+      "alignLeftButton": "Vänster",
+      "alignLeftAriaLabel": "Justera text till vänster",
+      "alignCenterButton": "Centrerad",
+      "alignCenterAriaLabel": "Centrera text",
+      "alignRightButton": "Höger",
+      "alignRightAriaLabel": "Justera text till höger"
+    },
+    "fontTester": {
+      "openFeaturesButton": "OpenType-funktioner",
+      "openFeaturesAriaLabel": "Öppna OpenType-funktioner dialog",
+      "dialogTitle": "OpenType-funktioner",
+      "closeDialogAriaLabel": "Stäng dialog"
+    },
+    "sampleTextSelector": {
+      "ariaLabel": "Välj exempeltext",
+      "placeholder": "Exempeltexter"
+    },
+    "fontStyleSelector": {
+      "label": "Stil",
+      "ariaLabel": "Välj typsnittsstil"
+    },
+    "styleControls": {
+      "fontSizeLabel": "Teckenstorlek",
+      "lineHeightLabel": "Radhöjd",
+      "letterSpacingLabel": "Teckenavstånd"
+    }
+  }
+}

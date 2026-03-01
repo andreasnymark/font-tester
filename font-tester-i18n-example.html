@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Tester i18n Example</title>
+</head>
+<body>
+
+<!-- STEP 1: Add translation JSON in a script tag with id="font-tester-i18n" -->
+<script id="font-tester-i18n" type="application/json">
+{
+  "en": {
+    "textControls": {
+      "toolbarLabel": "Text controls",
+      "uppercaseButton": "Uppercase",
+      "uppercaseAriaLabel": "Toggle uppercase text",
+      "directionGroupLabel": "Text direction",
+      "ltrButton": "LTR",
+      "ltrAriaLabel": "Left to right",
+      "rtlButton": "RTL",
+      "rtlAriaLabel": "Right to left",
+      "alignmentGroupLabel": "Text alignment",
+      "alignLeftButton": "Left",
+      "alignLeftAriaLabel": "Align text left",
+      "alignCenterButton": "Center",
+      "alignCenterAriaLabel": "Align text center",
+      "alignRightButton": "Right",
+      "alignRightAriaLabel": "Align text right"
+    },
+    "fontTester": {
+      "openFeaturesButton": "OpenType Features",
+      "openFeaturesAriaLabel": "Open OpenType features dialog",
+      "dialogTitle": "OpenType Features",
+      "closeDialogAriaLabel": "Close dialog"
+    },
+    "sampleTextSelector": {
+      "ariaLabel": "Select sample text",
+      "placeholder": "Sample Texts"
+    },
+    "fontStyleSelector": {
+      "label": "Style",
+      "ariaLabel": "Select font style"
+    },
+    "styleControls": {
+      "fontSizeLabel": "Font Size",
+      "lineHeightLabel": "Line Height",
+      "letterSpacingLabel": "Letter Spacing"
+    }
+  },
+  "sv": {
+    "textControls": {
+      "toolbarLabel": "Textkontroller",
+      "uppercaseButton": "Versaler",
+      "uppercaseAriaLabel": "Växla versaler",
+      "directionGroupLabel": "Textriktning",
+      "ltrButton": "VTH",
+      "ltrAriaLabel": "Vänster till höger",
+      "rtlButton": "HTV",
+      "rtlAriaLabel": "Höger till vänster",
+      "alignmentGroupLabel": "Textjustering",
+      "alignLeftButton": "Vänster",
+      "alignLeftAriaLabel": "Justera text till vänster",
+      "alignCenterButton": "Centrerad",
+      "alignCenterAriaLabel": "Centrera text",
+      "alignRightButton": "Höger",
+      "alignRightAriaLabel": "Justera text till höger"
+    },
+    "fontTester": {
+      "openFeaturesButton": "OpenType-funktioner",
+      "openFeaturesAriaLabel": "Öppna OpenType-funktioner dialog",
+      "dialogTitle": "OpenType-funktioner",
+      "closeDialogAriaLabel": "Stäng dialog"
+    },
+    "sampleTextSelector": {
+      "ariaLabel": "Välj exempeltext",
+      "placeholder": "Exempeltexter"
+    },
+    "fontStyleSelector": {
+      "label": "Stil",
+      "ariaLabel": "Välj typsnittsstil"
+    },
+    "styleControls": {
+      "fontSizeLabel": "Teckenstorlek",
+      "lineHeightLabel": "Radhöjd",
+      "letterSpacingLabel": "Teckenavstånd"
+    }
+  }
+}
+</script>
+
+<!-- STEP 2: Use font-tester with lang attribute -->
+<!-- Inline JSON loads synchronously, so elements can be in the markup directly -->
+
+<h2>English Font Tester</h2>
+<font-tester lang="en" controls="text-controls,font-size,line-height,letter-spacing,font-style,opentype">
+  <font-style name="Regular" weight="400" style="normal" default></font-style>
+  <font-style name="Bold" weight="700" style="normal"></font-style>
+
+  <opentype-feature code="kern" name="Kerning" default></opentype-feature>
+  <opentype-feature code="liga" name="Ligatures"></opentype-feature>
+
+  <sample-text>The quick brown fox jumps over the lazy dog</sample-text>
+  <sample-text name="Pangram">Pack my box with five dozen liquor jugs</sample-text>
+  <sample-text name="Numbers">0123456789</sample-text>
+</font-tester>
+
+<hr style="margin: 3rem 0;">
+
+<h2>Swedish Font Tester</h2>
+<font-tester lang="sv" controls="text-controls,font-size,line-height,letter-spacing,font-style,opentype">
+  <font-style name="Regular" weight="400" style="normal" default></font-style>
+  <font-style name="Bold" weight="700" style="normal"></font-style>
+
+  <opentype-feature code="kern" name="Kerning" default></opentype-feature>
+  <opentype-feature code="liga" name="Ligaturer"></opentype-feature>
+
+  <sample-text>Flygande bäckasiner söka hwila på mjuka tuvor</sample-text>
+  <sample-text name="Pangram">Yxskaftbud, ge vår WC-zonmö IQ-hjälp</sample-text>
+  <sample-text name="Siffror">0123456789</sample-text>
+</font-tester>
+
+<!-- STEP 3: Load font-tester -->
+<script type="module" src="./dist/font-tester.min.js"></script>
+
+</body>
+</html>
