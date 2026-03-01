@@ -10,3 +10,4 @@
 
 // Import and register all components
 export * from './src/index.js';
+import './font-tester-loader.js';
