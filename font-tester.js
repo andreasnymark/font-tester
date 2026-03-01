@@ -1,11 +1,9 @@
 /**
- * Font Tester Web Component
- *
- * A modular web component for testing and previewing fonts with full control
- * over typography settings, OpenType features, and text samples.
- *
- * @module font-tester
- * @version 0.0.1
+ * Interactive web component for testing and previewing fonts. No dependencies.
+ * @author Andreas Nymark <andreas@nymark.co>
+ * @license MIT
+ * @version 1.0.0
+ * @link https://github.com/andreasnymark/font-tester
  */
 
 // Import and register all components
