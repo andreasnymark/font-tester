@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Font-tester.js — Demo</title>
+
+		<script id="font-metadata" nonce="+HPLsMlal9QomgnTWSGTGA==" type="application/json">
+			{
+    "grenze-thin": {"name": "Grenze Thin", "family": "grenze-thin", "weightValue": "100",
+  "weightName": "Thin", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-100-normal.woff2"},
+    "grenze-thin-italic": {"name": "Grenze Thin Italic", "family": "grenze-thin-italic",
+  "weightValue": "100", "weightName": "Thin", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-100-italic.woff2"},
+    "grenze-extralight": {"name": "Grenze Extra Light", "family": "grenze-extralight",
+  "weightValue": "200", "weightName": "Extra-light", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-200-normal.woff2"},
+    "grenze-extralight-italic": {"name": "Grenze Extra Light Italic", "family":
+  "grenze-extralight-italic", "weightValue": "200", "weightName": "Extra-light", "style":
+  "italic", "url": "https://fonts.bunny.net/grenze/files/grenze-latin-200-italic.woff2"},
+    "grenze-light": {"name": "Grenze Light", "family": "grenze-light", "weightValue": "300",
+  "weightName": "Light", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-300-normal.woff2"},
+    "grenze-light-italic": {"name": "Grenze Light Italic", "family": "grenze-light-italic",
+  "weightValue": "300", "weightName": "Light", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-300-italic.woff2"},
+    "grenze-regular": {"name": "Grenze Regular", "family": "grenze-regular", "weightValue":
+  "400", "weightName": "Regular", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-400-normal.woff2"},
+    "grenze-regular-italic": {"name": "Grenze Regular Italic", "family": "grenze-regular-italic",
+   "weightValue": "400", "weightName": "Regular", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-400-italic.woff2"},
+    "grenze-medium": {"name": "Grenze Medium", "family": "grenze-medium", "weightValue": "500",
+  "weightName": "Medium", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-500-normal.woff2"},
+    "grenze-medium-italic": {"name": "Grenze Medium Italic", "family": "grenze-medium-italic",
+  "weightValue": "500", "weightName": "Medium", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-500-italic.woff2"},
+    "grenze-semibold": {"name": "Grenze Semi Bold", "family": "grenze-semibold", "weightValue":
+  "600", "weightName": "Semi-bold", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-600-normal.woff2"},
+    "grenze-semibold-italic": {"name": "Grenze Semi Bold Italic", "family":
+  "grenze-semibold-italic", "weightValue": "600", "weightName": "Semi-bold", "style": "italic",
+  "url": "https://fonts.bunny.net/grenze/files/grenze-latin-600-italic.woff2"},
+    "grenze-bold": {"name": "Grenze Bold", "family": "grenze-bold", "weightValue": "700",
+  "weightName": "Bold", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-700-normal.woff2"},
+    "grenze-bold-italic": {"name": "Grenze Bold Italic", "family": "grenze-bold-italic",
+  "weightValue": "700", "weightName": "Bold", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-700-italic.woff2"},
+    "grenze-extrabold": {"name": "Grenze Extra Bold", "family": "grenze-extrabold",
+  "weightValue": "800", "weightName": "Extra-bold", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-800-normal.woff2"},
+    "grenze-extrabold-italic": {"name": "Grenze Extra Bold Italic", "family":
+  "grenze-extrabold-italic", "weightValue": "800", "weightName": "Extra-bold", "style": "italic",
+   "url": "https://fonts.bunny.net/grenze/files/grenze-latin-800-italic.woff2"},
+    "grenze-black": {"name": "Grenze Black", "family": "grenze-black", "weightValue": "900",
+  "weightName": "Black", "style": "normal", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-900-normal.woff2"},
+    "grenze-black-italic": {"name": "Grenze Black Italic", "family": "grenze-black-italic",
+  "weightValue": "900", "weightName": "Black", "style": "italic", "url":
+  "https://fonts.bunny.net/grenze/files/grenze-latin-900-italic.woff2"}
+  }
+		</script>
+
+		<script type="importmap" nonce="+HPLsMlal9QomgnTWSGTGA==">
+		  {
+			  "imports": {
+				  "font-loader": "./font-loader.min.js"
+			  }
+		  }
+		  </script>
+		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="font-loader.min.js" type="module"></script>
+		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="font-tester-with-loader.min.js" type="module"></script>
+		<style>
+			font-tester {
+			    --display-min-height: 0;
+			    --display-padding: 0;
+			    --display-border-width: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<font-tester data-font-load="eager" data-font-family="grenze-thin" data-requires-all-weights="false" editable="false" font-family="grenze-extralight" controls="text-controls,font-size,opentype,font-style,line-height,letter-spacing" font-size="92px" line-height=".9" letter-spacing="-0.03em" >
+
+			<font-style name="Grenze Thin" family="grenze-thin" weight="100" style="normal"></font-style>
+			<font-style name="Grenze ExtraLight" family="grenze-extralight" weight="200" style="normal"></font-style>
+			<font-style name="Grenze Light" family="grenze-light" weight="300" style="normal"></font-style>
+			<font-style name="Grenze Regular" family="grenze-regular" weight="400" style="normal"></font-style>
+			<font-style name="Grenze Medium" family="grenze-medium" weight="500" style="normal"></font-style>
+			<font-style name="Grenze SemiBold" family="grenze-semibold" weight="600" style="normal"></font-style>
+			<font-style name="Grenze Bold" family="grenze-bold" weight="700" style="normal"></font-style>
+			<font-style name="Grenze ExtraBold" family="grenze-extrabold" weight="800" style="normal"></font-style>
+			<font-style name="Grenze Black" family="grenze-black" weight="900" style="normal"></font-style>
+			<font-style name="Grenze Thin Italic" family="grenze-thin" weight="100" style="italic"></font-style>
+			<font-style name="Grenze ExtraLight Italic" family="grenze-extralight" weight="200" style="italic"></font-style>
+			<font-style name="Grenze Light Italic" family="grenze-light" weight="300" style="italic"></font-style>
+			<font-style name="Grenze Regular Italic" family="grenze-regular" weight="400" style="italic"></font-style>
+			<font-style name="Grenze Medium Italic" family="grenze-medium" weight="500" style="italic"></font-style>
+			<font-style name="Grenze SemiBold Italic" family="grenze-semibold" weight="600" style="italic"></font-style>
+			<font-style name="Grenze Bold Italic" family="grenze-bold" weight="700" style="italic"></font-style>
+			<font-style name="Grenze ExtraBold Italic" family="grenze-extrabold" weight="800" style="italic"></font-style>
+			<font-style name="Grenze Black Italic" family="grenze-black" weight="900" style="italic"></font-style>
+			<opentype-feature code="dlig" name="Discretionary Ligatures"></opentype-feature>
+			<opentype-feature code="smcp" name="Small Caps"></opentype-feature>
+			<opentype-feature code="kern" name="Kerning" default></opentype-feature>
+			<sample-text name="Swedish">Äntligen stod prästen i predikstolen. Församlingens huvuden lyftes. Så, där var han ändå!</sample-text>
+			<sample-text name="English">At last the minister stood in the pulpit. The heads of the congregation were lifted. Well, there he finally was. </sample-text>
+			<sample-text name="ABC123">ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789</sample-text>
+	</font-tester>
+</body>
+</html>
