@@ -185,6 +185,13 @@ export class FontTester extends FontTesterBase {
           margin-bottom: var(--section-gap, 30px);
         }
 
+        .controls-row {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: var(--control-gap, 10px);
+        }
+
         .section:empty {
           display: none;
         }
@@ -267,22 +274,16 @@ export class FontTester extends FontTesterBase {
       </style>
 
       <div class="container">
-        ${enabled.textControls ? `
-          <div class="section" part="controls-section">
-            <text-controls>
-              <sample-text-selector></sample-text-selector>
-              ${enabled.fontStyle ? '<font-style-selector></font-style-selector>' : ''}
-              ${enabled.opentype ? `<button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>` : ''}
-            </text-controls>
-          </div>
-        ` : enabled.fontStyle ? `
-          <div class="section" part="controls-section">
-            <font-style-selector></font-style-selector>
+        ${(enabled.textControls || enabled.fontStyle || enabled.opentype) ? `
+          <div class="section controls-row" part="controls-section">
+            ${enabled.textControls ? `
+              <text-controls part="text-controls"
+                exportparts="button, uppercase-button, radio-group, direction-group, alignment-group, ltr-button, rtl-button, align-left-button, align-center-button, align-right-button">
+              </text-controls>
+              <sample-text-selector part="sample-text-selector" exportparts="select: sample-select"></sample-text-selector>
+            ` : ''}
+            ${enabled.fontStyle ? `<font-style-selector part="font-style-selector" exportparts="wrapper: style-wrapper, label: style-label, select: style-select"></font-style-selector>` : ''}
             ${enabled.opentype ? `<button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>` : ''}
-          </div>
-        ` : enabled.opentype ? `
-          <div class="section" part="controls-section">
-            <button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>
           </div>
         ` : ''}
 

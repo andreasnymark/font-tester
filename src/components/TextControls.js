@@ -97,7 +97,6 @@ export class TextControls extends FontTesterBase {
           <button id="alignRightBtn" part="button radio-button align-right-button" role="radio" aria-checked="false" aria-label="${this.t('textControls.alignRightAriaLabel', 'Align text right')}">${this.t('textControls.alignRightButton', 'Right')}</button>
         </div>
 
-        <slot></slot>
       </div>
     `;
   }
