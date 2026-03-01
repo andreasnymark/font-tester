@@ -1,0 +1,192 @@
+/**
+ * font-tester theme template
+ * Copy and customise these overrides in your own stylesheet.
+ * All custom properties are set on the relevant element selector so they
+ * override the defaults defined inside each component's shadow root.
+ *
+ * ::part() selectors let you target internal elements directly.
+ * Note: ::part() does not work across nested shadow roots, so target the
+ * inner element (e.g. font-display, text-controls) rather than font-tester.
+ */
+
+
+/* font-tester (host) */
+
+font-tester {
+  --container-max-width: 1200px;
+  --container-padding: 20px;
+  --section-gap: 30px;
+  --divider-color: #e0e0e0;
+
+  /* OpenType features trigger button */
+  --btn-bg: white;
+  --btn-bg-hover: #f5f5f5;
+  --btn-border-color: #e0e0e0;
+  --btn-border-radius: 4px;
+  --btn-color: #000;
+  --btn-font-size: 13px;
+
+  /* OpenType features dialog */
+  --dialog-border-color: #e0e0e0;
+  --dialog-border-radius: 8px;
+  --dialog-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --dialog-backdrop-color: rgba(0, 0, 0, 0.3);
+  --dialog-header-border-color: #e0e0e0;
+  --dialog-close-color: #666;
+}
+
+/* Layout sections — container is a flex column, so order works */
+font-tester::part(controls-section) { }
+font-tester::part(display-section) { }
+font-tester::part(style-controls-section) { }
+
+font-tester::part(features-button) { }
+font-tester::part(dialog) { }
+font-tester::part(dialog-header) { }
+font-tester::part(dialog-title) { }
+font-tester::part(close-button) { }
+
+
+/* font-display */
+
+font-tester font-display {
+  /* Display area */
+  --display-bg: #ffffff;
+  --display-border-color: #e0e0e0;
+  --display-border-width: 1px;
+  --display-border-radius: 8px;
+  --display-padding: 40px;
+  --display-min-height: 200px;
+
+  /* Preview text */
+  --text-color: #000000;
+  --text-font-size: 48px;
+  --text-font-weight: 400;
+  --text-line-height: 1.4;
+  --text-letter-spacing: 0em;
+  /* --display-font-family is managed by font-tester-loader — avoid overriding */
+
+  /* Status states */
+  --loading-color: #999;
+  --error-color: #f00;
+}
+
+font-tester font-display::part(display-area) { }
+font-tester font-display::part(display-text) { }
+
+
+/* text-controls */
+
+font-tester text-controls {
+  --control-bg: white;
+  --control-bg-hover: #f5f5f5;
+  --control-bg-active: #333;
+  --control-border: #e0e0e0;
+  --control-border-width: 1px;
+  --control-border-radius: 4px;
+  --control-text: #000;
+  --control-text-active: #fff;
+  --control-gap: 10px;
+}
+
+font-tester text-controls::part(toolbar) { }
+font-tester text-controls::part(button) { }           /* all buttons */
+font-tester text-controls::part(uppercase-button) { }
+font-tester text-controls::part(direction-group) { }
+font-tester text-controls::part(ltr-button) { }
+font-tester text-controls::part(rtl-button) { }
+font-tester text-controls::part(alignment-group) { }
+font-tester text-controls::part(align-left-button) { }
+font-tester text-controls::part(align-center-button) { }
+font-tester text-controls::part(align-right-button) { }
+
+
+/* style-controls */
+
+font-tester style-controls {
+  --control-gap: 20px;
+  --label-color: #333;
+  --slider-bg: #e0e0e0;
+  --slider-thumb-bg: #333;
+  --value-color: #666;
+}
+
+font-tester style-controls::part(controls) { }
+font-tester style-controls::part(control-row) { }     /* all rows */
+font-tester style-controls::part(label) { }           /* all labels */
+font-tester style-controls::part(slider) { }          /* all sliders */
+font-tester style-controls::part(value-display) { }   /* all value readouts */
+
+/* Per-control parts */
+font-tester style-controls::part(font-size-row) { }
+font-tester style-controls::part(font-size-label) { }
+font-tester style-controls::part(font-size-slider) { }
+font-tester style-controls::part(font-size-value) { }
+
+font-tester style-controls::part(line-height-row) { }
+font-tester style-controls::part(line-height-label) { }
+font-tester style-controls::part(line-height-slider) { }
+font-tester style-controls::part(line-height-value) { }
+
+font-tester style-controls::part(letter-spacing-row) { }
+font-tester style-controls::part(letter-spacing-label) { }
+font-tester style-controls::part(letter-spacing-slider) { }
+font-tester style-controls::part(letter-spacing-value) { }
+
+
+/* sample-text-selector */
+
+font-tester sample-text-selector {
+  --select-bg: white;
+  --select-border: #e0e0e0;
+  --select-border-width: 1px;
+  --select-border-hover: #333;
+  --select-border-radius: 4px;
+  --select-padding: 8px 12px;
+  --select-font-family: inherit;
+  --select-font-size: 13px;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  --select-arrow-position: right 12px center;
+}
+
+font-tester sample-text-selector::part(select) { }
+
+
+/* font-style-selector */
+
+font-tester font-style-selector {
+  --select-bg: white;
+  --select-border: #e0e0e0;
+  --select-border-width: 1px;
+  --select-border-hover: #333;
+  --select-border-radius: 4px;
+  --select-padding: 8px 12px;
+  --select-font-family: inherit;
+  --select-font-size: 13px;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  --select-arrow-position: right 12px center;
+}
+
+font-tester font-style-selector::part(wrapper) { }
+font-tester font-style-selector::part(label) { }
+font-tester font-style-selector::part(select) { }
+
+
+/* opentype-features */
+
+font-tester opentype-features {
+  --feature-bg: white;
+  --feature-bg-hover: #f5f5f5;
+  --feature-bg-active: #333;
+  --feature-border: #e0e0e0;
+  --feature-border-width: 1px;
+  --feature-border-radius: 4px;
+  --feature-text: #000;
+  --feature-text-active: #fff;
+  --feature-gap: 12px;
+  --feature-code-font-size: 11px;
+  --feature-code-opacity: 0.6;
+}
+
+font-tester opentype-features::part(features-grid) { }
+font-tester opentype-features::part(feature-toggle) { }
