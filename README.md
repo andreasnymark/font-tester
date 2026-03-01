@@ -36,6 +36,23 @@ Interactive web component for testing and previewing fonts. No dependencies. Bui
 </font-tester>
 ```
 
+### Initial style defaults
+
+Set starting values for the typography controls directly on `<font-tester>`:
+
+```html
+<font-tester
+  font-family="my-font"
+  font-size="64px"
+  line-height="1.2"
+  letter-spacing="0.02em"
+  text-align="center"
+  direction="rtl"
+>
+```
+
+These are read once at connect time — sliders initialise at these values and the display renders with them applied. They are not reactive after mount.
+
 ### `controls` attribute
 
 Comma-separated list of controls to show. Omit the attribute entirely to show all controls.
