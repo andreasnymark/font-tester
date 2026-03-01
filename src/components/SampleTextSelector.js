@@ -128,42 +128,32 @@ export class SampleTextSelector extends FontTesterBase {
       <style>
         :host {
           display: inline-block;
-          --select-bg: white;
-          --select-border: #e0e0e0;
-          --select-border-width: 1px;
-          --select-border-hover: #333;
-          --select-border-radius: 4px;
-          --select-padding: 8px 12px;
-          --select-font-family: inherit;
-          --select-font-size: 13px;
-          --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-          --select-arrow-position: right 12px center;
         }
 
         select {
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
-          padding: var(--select-padding);
+          padding: var(--select-padding, 8px 12px);
           padding-right: 36px;
-          border: var(--select-border-width) solid var(--select-border);
-          border-radius: var(--select-border-radius);
-          background: var(--select-bg);
-          background-image: var(--select-arrow);
+          border: var(--select-border-width, 1px) solid var(--select-border, #e0e0e0);
+          border-radius: var(--select-border-radius, 4px);
+          background: var(--select-bg, white);
+          background-image: var(--select-arrow, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E"));
           background-repeat: no-repeat;
-          background-position: var(--select-arrow-position);
-          font-family: var(--select-font-family);
-          font-size: var(--select-font-size);
+          background-position: var(--select-arrow-position, right 12px center);
+          font-family: var(--select-font-family, inherit);
+          font-size: var(--select-font-size, 13px);
           cursor: pointer;
           min-width: 150px;
         }
 
         select:hover {
-          border-color: var(--select-border-hover);
+          border-color: var(--select-border-hover, #333);
         }
 
         select:focus {
-          outline: 2px solid var(--select-border-hover);
+          outline: 2px solid var(--select-border-hover, #333);
           outline-offset: 2px;
         }
       </style>

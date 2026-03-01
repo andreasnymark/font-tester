@@ -208,16 +208,11 @@ export class StyleControls extends FontTesterBase {
       <style>
         :host {
           display: block;
-          --control-gap: 20px;
-          --label-color: #333;
-          --slider-bg: #e0e0e0;
-          --slider-thumb-bg: #333;
-          --value-color: #666;
         }
 
         .controls {
           display: grid;
-          gap: var(--control-gap);
+          gap: var(--control-gap, 20px);
         }
 
         .control-row {
@@ -229,7 +224,7 @@ export class StyleControls extends FontTesterBase {
         label {
           font-size: 13px;
           font-weight: 500;
-          color: var(--label-color);
+          color: var(--label-color, #333);
           min-width: 120px;
         }
 
@@ -237,13 +232,13 @@ export class StyleControls extends FontTesterBase {
           flex: 1;
           height: 4px;
           border-radius: 2px;
-          background: var(--slider-bg);
+          background: var(--slider-bg, #e0e0e0);
           outline: none;
           -webkit-appearance: none;
         }
 
         input[type="range"]:focus {
-          outline: 2px solid var(--slider-thumb-bg);
+          outline: 2px solid var(--slider-thumb-bg, #333);
           outline-offset: 2px;
         }
 
@@ -252,7 +247,7 @@ export class StyleControls extends FontTesterBase {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: var(--slider-thumb-bg);
+          background: var(--slider-thumb-bg, #333);
           cursor: pointer;
         }
 
@@ -260,7 +255,7 @@ export class StyleControls extends FontTesterBase {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          background: var(--slider-thumb-bg);
+          background: var(--slider-thumb-bg, #333);
           cursor: pointer;
           border: none;
         }
@@ -268,7 +263,7 @@ export class StyleControls extends FontTesterBase {
         .value-display {
           font-size: 13px;
           font-weight: 500;
-          color: var(--value-color);
+          color: var(--value-color, #666);
           min-width: 60px;
           text-align: right;
         }

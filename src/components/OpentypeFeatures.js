@@ -103,23 +103,12 @@ export class OpentypeFeatures extends FontTesterBase {
       <style>
         :host {
           display: block;
-          --feature-bg: white;
-          --feature-bg-hover: #f5f5f5;
-          --feature-bg-active: #333;
-          --feature-border: #e0e0e0;
-          --feature-border-width: 1px;
-          --feature-border-radius: 4px;
-          --feature-text: #000;
-          --feature-text-active: #fff;
-          --feature-gap: 12px;
-          --feature-code-font-size: 11px;
-          --feature-code-opacity: 0.6;
         }
 
         .features-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: var(--feature-gap);
+          gap: var(--feature-gap, 12px);
         }
 
         .feature-toggle {
@@ -129,10 +118,10 @@ export class OpentypeFeatures extends FontTesterBase {
           align-items: center;
           gap: 8px;
           padding: 8px 12px;
-          border: var(--feature-border-width) solid var(--feature-border);
-          border-radius: var(--feature-border-radius);
-          background: var(--feature-bg);
-          color: var(--feature-text);
+          border: var(--feature-border-width, 1px) solid var(--feature-border, #e0e0e0);
+          border-radius: var(--feature-border-radius, 4px);
+          background: var(--feature-bg, white);
+          color: var(--feature-text, #000);
           cursor: pointer;
           transition: all 0.2s;
           text-align: left;
@@ -140,18 +129,18 @@ export class OpentypeFeatures extends FontTesterBase {
         }
 
         .feature-toggle:hover {
-          background: var(--feature-bg-hover);
+          background: var(--feature-bg-hover, #f5f5f5);
         }
 
         .feature-toggle:focus-visible {
-          outline: 2px solid var(--feature-bg-active);
+          outline: 2px solid var(--feature-bg-active, #333);
           outline-offset: 2px;
         }
 
         .feature-toggle[aria-pressed="true"] {
-          background: var(--feature-bg-active);
-          color: var(--feature-text-active);
-          border-color: var(--feature-bg-active);
+          background: var(--feature-bg-active, #333);
+          color: var(--feature-text-active, #fff);
+          border-color: var(--feature-bg-active, #333);
         }
 
         .feature-toggle:disabled {
@@ -172,8 +161,8 @@ export class OpentypeFeatures extends FontTesterBase {
         }
 
         .feature-code {
-          font-size: var(--feature-code-font-size);
-          opacity: var(--feature-code-opacity);
+          font-size: var(--feature-code-font-size, 11px);
+          opacity: var(--feature-code-opacity, 0.6);
           font-family: monospace;
         }
 

@@ -20,47 +20,38 @@ export class TextControls extends FontTesterBase {
       <style>
         :host {
           display: block;
-          --control-bg: white;
-          --control-bg-hover: #f5f5f5;
-          --control-bg-active: #333;
-          --control-border: #e0e0e0;
-          --control-border-width: 1px;
-          --control-border-radius: 4px;
-          --control-text: #000;
-          --control-text-active: #fff;
-          --control-gap: 10px;
         }
 
         .controls {
           display: flex;
-          gap: var(--control-gap);
+          gap: var(--control-gap, 10px);
           flex-wrap: wrap;
         }
 
         button {
           padding: 8px 16px;
-          border: var(--control-border-width) solid var(--control-border);
-          border-radius: var(--control-border-radius);
-          background: var(--control-bg);
-          color: var(--control-text);
+          border: var(--control-border-width, 1px) solid var(--control-border, #e0e0e0);
+          border-radius: var(--control-border-radius, 4px);
+          background: var(--control-bg, white);
+          color: var(--control-text, #000);
           cursor: pointer;
           font-size: 13px;
           transition: all 0.2s;
         }
 
         button:hover:not(:disabled) {
-          background: var(--control-bg-hover);
+          background: var(--control-bg-hover, #f5f5f5);
         }
 
         button:focus {
-          outline: 2px solid var(--control-bg-active);
+          outline: 2px solid var(--control-bg-active, #333);
           outline-offset: 2px;
         }
 
         button.active {
-          background: var(--control-bg-active);
-          color: var(--control-text-active);
-          border-color: var(--control-bg-active);
+          background: var(--control-bg-active, #333);
+          color: var(--control-text-active, #fff);
+          border-color: var(--control-bg-active, #333);
         }
 
         button:disabled {
@@ -78,13 +69,13 @@ export class TextControls extends FontTesterBase {
         }
 
         .radio-group button:first-child {
-          border-top-left-radius: var(--control-border-radius);
-          border-bottom-left-radius: var(--control-border-radius);
+          border-top-left-radius: var(--control-border-radius, 4px);
+          border-bottom-left-radius: var(--control-border-radius, 4px);
         }
 
         .radio-group button:last-child {
-          border-top-right-radius: var(--control-border-radius);
-          border-bottom-right-radius: var(--control-border-radius);
+          border-top-right-radius: var(--control-border-radius, 4px);
+          border-bottom-right-radius: var(--control-border-radius, 4px);
         }
 
         .radio-group button:not(:last-child) {

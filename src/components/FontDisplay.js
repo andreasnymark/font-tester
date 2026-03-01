@@ -28,43 +28,24 @@ export class FontDisplay extends FontTesterBase {
       <style>
         :host {
           display: block;
-          /* Display area styling */
-          --display-bg: #ffffff;
-          --display-border-color: #e0e0e0;
-          --display-border-width: 1px;
-          --display-border-radius: 8px;
-          --display-padding: 40px;
-          --display-min-height: 200px;
-
-          /* Text styling */
-          --text-color: #000000;
-          --text-font-size: 48px;
-          --text-font-weight: 400;
-          --text-line-height: 1.4;
-          --text-letter-spacing: 0em;
-          --display-font-family: system-ui;
-
-          /* Status states */
-          --loading-color: #999;
-          --error-color: #f00;
         }
 
         .display-area {
-          background: var(--display-bg);
-          border: var(--display-border-width) solid var(--display-border-color);
-          border-radius: var(--display-border-radius);
-          padding: var(--display-padding);
-          min-height: var(--display-min-height);
+          background: var(--display-bg, #ffffff);
+          border: var(--display-border-width, 1px) solid var(--display-border-color, #e0e0e0);
+          border-radius: var(--display-border-radius, 8px);
+          padding: var(--display-padding, 40px);
+          min-height: var(--display-min-height, 200px);
           position: relative;
         }
 
         .display-text {
-          font-family: var(--display-font-family);
-          font-size: var(--text-font-size);
-          font-weight: var(--text-font-weight);
-          line-height: var(--text-line-height);
-          letter-spacing: var(--text-letter-spacing);
-          color: var(--text-color);
+          font-family: var(--display-font-family, system-ui);
+          font-size: var(--text-font-size, 48px);
+          font-weight: var(--text-font-weight, 400);
+          line-height: var(--text-line-height, 1.4);
+          letter-spacing: var(--text-letter-spacing, 0em);
+          color: var(--text-color, #000000);
           outline: none;
           word-wrap: break-word;
           white-space: pre-wrap;
@@ -77,7 +58,7 @@ export class FontDisplay extends FontTesterBase {
           top: 10px;
           right: 10px;
           font-size: 12px;
-          color: var(--loading-color);
+          color: var(--loading-color, #999);
         }
 
         :host(.error) .display-area::after {
@@ -86,7 +67,7 @@ export class FontDisplay extends FontTesterBase {
           top: 10px;
           right: 10px;
           font-size: 12px;
-          color: var(--error-color);
+          color: var(--error-color, #f00);
         }
 
         .sr-only {

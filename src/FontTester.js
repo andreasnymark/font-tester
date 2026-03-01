@@ -171,38 +171,18 @@ export class FontTester extends FontTesterBase {
         :host {
           display: block;
           font-family: system-ui;
-          --container-max-width: 1200px;
-          --container-padding: 20px;
-          --section-gap: 30px;
-          --divider-color: #e0e0e0;
-
-          /* Button (OpenType features trigger) */
-          --btn-bg: white;
-          --btn-bg-hover: #f5f5f5;
-          --btn-border-color: #e0e0e0;
-          --btn-border-radius: 4px;
-          --btn-color: #000;
-          --btn-font-size: 13px;
-
-          /* Dialog */
-          --dialog-border-color: #e0e0e0;
-          --dialog-border-radius: 8px;
-          --dialog-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          --dialog-backdrop-color: rgba(0, 0, 0, 0.3);
-          --dialog-header-border-color: #e0e0e0;
-          --dialog-close-color: #666;
         }
 
         .container {
           display: flex;
           flex-direction: column;
-          max-width: var(--container-max-width);
+          max-width: var(--container-max-width, 1200px);
           margin: 0 auto;
-          padding: var(--container-padding);
+          padding: var(--container-padding, 20px);
         }
 
         .section {
-          margin-bottom: var(--section-gap);
+          margin-bottom: var(--section-gap, 30px);
         }
 
         .section:empty {
@@ -215,30 +195,30 @@ export class FontTester extends FontTesterBase {
 
         .features-btn {
           padding: 8px 16px;
-          border: 1px solid var(--btn-border-color);
-          border-radius: var(--btn-border-radius);
-          background: var(--btn-bg);
-          color: var(--btn-color);
+          border: 1px solid var(--btn-border-color, #e0e0e0);
+          border-radius: var(--btn-border-radius, 4px);
+          background: var(--btn-bg, white);
+          color: var(--btn-color, #000);
           cursor: pointer;
-          font-size: var(--btn-font-size);
+          font-size: var(--btn-font-size, 13px);
           transition: all 0.2s;
         }
 
         .features-btn:hover {
-          background: var(--btn-bg-hover);
+          background: var(--btn-bg-hover, #f5f5f5);
         }
 
         .features-btn:focus {
-          outline: 2px solid var(--btn-border-color);
+          outline: 2px solid var(--btn-border-color, #e0e0e0);
           outline-offset: 2px;
         }
 
         dialog {
-          border: 1px solid var(--dialog-border-color);
-          border-radius: var(--dialog-border-radius);
+          border: 1px solid var(--dialog-border-color, #e0e0e0);
+          border-radius: var(--dialog-border-radius, 8px);
           padding: 0;
           max-width: 600px;
-          box-shadow: var(--dialog-shadow);
+          box-shadow: var(--dialog-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
           z-index: 1000;
           position: fixed;
           top: 50%;
@@ -248,7 +228,7 @@ export class FontTester extends FontTesterBase {
         }
 
         dialog::backdrop {
-          background: var(--dialog-backdrop-color);
+          background: var(--dialog-backdrop-color, rgba(0, 0, 0, 0.3));
           z-index: 999;
         }
 
@@ -257,7 +237,7 @@ export class FontTester extends FontTesterBase {
           justify-content: space-between;
           align-items: center;
           padding: 20px;
-          border-bottom: 1px solid var(--dialog-header-border-color);
+          border-bottom: 1px solid var(--dialog-header-border-color, #e0e0e0);
         }
 
         .dialog-header h3 {
@@ -272,13 +252,13 @@ export class FontTester extends FontTesterBase {
           font-size: 20px;
           cursor: pointer;
           padding: 4px 8px;
-          color: var(--dialog-close-color);
+          color: var(--dialog-close-color, #666);
           border-radius: 4px;
         }
 
         .close-btn:hover {
-          background: var(--btn-bg-hover);
-          color: var(--btn-color);
+          background: var(--btn-bg-hover, #f5f5f5);
+          color: var(--btn-color, #000);
         }
 
         .dialog-content {
