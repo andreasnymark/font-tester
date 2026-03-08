@@ -74,6 +74,29 @@
 		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="./demo/font-loader.min.js" type="module"></script>
 		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="./dist/font-tester-with-loader.min.js" type="module"></script>
 		<style>
+			@font-face {
+				font-family: 'bit-count';
+				src: url('./demo/BitcountPropDouble-VariableFont_CRSV,ELSH,ELXP,slnt,wght.ttf') format('truetype');
+			}
+		</style>
+		<style>
+			body {
+				max-width: 1200px;
+				margin: auto;
+				font-family: system-ui;
+			}
+			h1,h2 {
+				margin: 2em 0;
+			}
+			hr {
+				border: 0 solid transparent;
+				margin: 2rem 0;
+				border-bottom: 1px solid #ddd;
+			}
+			:not(:defined) {
+				opacity: 0;
+				min-height: 200px;
+			}
 			font-tester {
 			    --display-min-height: 0;
 			    --display-padding: 0;
@@ -84,8 +107,12 @@
 			font-tester::part( font-style-selector ) { order: 1 }
 			font-tester::part( features-button ) { order: 4 }
 		</style>
+
 	</head>
 	<body>
+		<h1>Font tester web component</h1>
+		<hr>
+		<h2>Static fonts</h2>
 		<font-tester data-font-load="eager" data-font-family="grenze-thin" data-requires-all-weights="false" editable="false" font-family="grenze-extralight" controls="text-controls,font-size,opentype,font-style,line-height,letter-spacing" font-size="92px" line-height=".9" letter-spacing="-0.03em" >
 			<font-style name="Grenze Thin" family="grenze-thin" weight="100" style="normal"></font-style>
 			<font-style name="Grenze ExtraLight" family="grenze-extralight" weight="200" style="normal"></font-style>
@@ -111,6 +138,21 @@
 			<sample-text name="Swedish">Äntligen stod prästen i predikstolen. Församlingens huvuden lyftes. Så, där var han ändå!</sample-text>
 			<sample-text name="English">At last the minister stood in the pulpit. The heads of the congregation were lifted. Well, there he finally was. </sample-text>
 			<sample-text name="ABC123">ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789</sample-text>
-	</font-tester>
+		</font-tester>
+		<p>Example font is Grenze by <a href="https://renatapolastri.com">Renata Polastri</a> & <a href="https://www.omnibus-type.com/">Omnibus-Type</a> Team</p>
+		<hr>
+		<h2>Variable font</h2>
+		<font-tester font-family="bit-count" controls="text-controls,font-size,line-height,letter-spacing,var-axes" font-size="92px" line-height=".9" letter-spacing="0em">
+			<font-variation-axis tag="wght" name="Weight" min="100" max="900" default="400" step="1"></font-variation-axis>
+			<font-variation-axis tag="slnt" name="Slant" min="-8" max="0" default="0" step="1"></font-variation-axis>
+			<font-variation-axis tag="CRSV" name="Cursive" min="0" max="1" default="0" step="1"></font-variation-axis>
+			<font-variation-axis tag="ELSH" name="Element Shape" min="0" max="100" default="0" step="0.1"></font-variation-axis>
+			<font-variation-axis tag="ELXP" name="Element Expand" min="0" max="100" default="0" step="1"></font-variation-axis>
+			<sample-text name="Swedish">Äntligen stod prästen i predikstolen. Församlingens huvuden lyftes. Så, där var han ändå!</sample-text>
+			<sample-text name="English">At last the minister stood in the pulpit. The heads of the congregation were lifted. Well, there he finally was. </sample-text>
+			<sample-text name="ABC123">ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789</sample-text>
+		</font-tester>
+		<hr>
+		<p>Example font is Bitcount Prop Double by <a href="https://www.typetr.com">Petr van Blokland</a></p>
 </body>
 </html>

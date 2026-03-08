@@ -7,6 +7,7 @@ Interactive web component for testing and previewing fonts. No dependencies. Bui
 - Live text preview with editable text
 - Font style/weight variant selector
 - Adjustable size, line height, and letter spacing
+- Variable font axis sliders
 - OpenType feature toggles
 - Custom sample texts
 - Lazy font loading via [font-loader](https://github.com/andreasnymark/font-loader) (optional)
@@ -36,6 +37,33 @@ Interactive web component for testing and previewing fonts. No dependencies. Bui
 </font-tester>
 ```
 
+### Variable fonts
+
+For variable fonts, use `var-axes` in `controls` and declare axes via `<font-variation-axis>` markers instead of `<font-style>` variants. The two are mutually exclusive.
+
+```html
+<font-tester font-family="my-variable-font" controls="text-controls,font-size,line-height,var-axes">
+
+  <font-variation-axis tag="wght" name="Weight" min="100" max="900" default="400"></font-variation-axis>
+  <font-variation-axis tag="wdth" name="Width" min="75" max="125" default="100"></font-variation-axis>
+  <font-variation-axis tag="OPSZ" name="Optical size" min="6" max="72" default="14" step="0.1"></font-variation-axis>
+
+</font-tester>
+```
+
+Each axis renders as a range slider. All axes compose into a single `font-variation-settings` value applied to the preview text.
+
+Axis attributes: `tag` (4-char axis tag, required), `name` (label), `min`, `max`, `default`, `step`.
+
+Layout is controlled via CSS custom properties on `var-axes-controls`:
+
+```css
+font-tester var-axes-controls {
+  --axis-flex-basis: 200px; /* min width per axis — controls how many fit per row */
+  --axis-gap: 20px;
+}
+```
+
 ### Initial style defaults
 
 Set starting values for the typography controls directly on `<font-tester>`:
@@ -63,8 +91,9 @@ Comma-separated list of controls to show. Omit the attribute entirely to show al
 | `font-size` | Font size slider |
 | `line-height` | Line height slider |
 | `letter-spacing` | Letter spacing slider |
-| `font-style` | Style/weight variant dropdown |
+| `font-style` | Style/weight variant dropdown (static fonts) |
 | `opentype` | OpenType features dialog |
+| `var-axes` | Variable font axis sliders |
 
 ### Including the script
 
