@@ -146,7 +146,8 @@ export class FontTester extends FontTesterBase {
         textControls: true,
         styleControls: ['font-size', 'line-height', 'letter-spacing'],
         fontStyle: true,
-        opentype: true
+        opentype: true,
+        varAxes: true
       };
     }
 
@@ -158,7 +159,8 @@ export class FontTester extends FontTesterBase {
         ['font-size', 'line-height', 'letter-spacing'].includes(c)
       ),
       fontStyle: controls.includes('font-style'),
-      opentype: controls.includes('opentype')
+      opentype: controls.includes('opentype'),
+      varAxes: controls.includes('var-axes')
     };
   }
 
@@ -284,6 +286,12 @@ export class FontTester extends FontTesterBase {
             ` : ''}
             ${enabled.fontStyle ? `<font-style-selector part="font-style-selector" exportparts="wrapper: style-wrapper, label: style-label, select: style-select"></font-style-selector>` : ''}
             ${enabled.opentype ? `<button id="openFeaturesBtn" type="button" class="features-btn" part="features-button" aria-label="${this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features dialog'))}">${this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'))}</button>` : ''}
+          </div>
+        ` : ''}
+
+        ${enabled.varAxes ? `
+          <div class="section" part="var-axes-section">
+            <var-axes-controls part="var-axes-controls"></var-axes-controls>
           </div>
         ` : ''}
 
