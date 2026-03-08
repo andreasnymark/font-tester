@@ -142,7 +142,8 @@ export class FontDisplay extends FontTesterBase {
   applyStyle(property, value) {
     const element = this.textElement;
     if (element) {
-      element.style[property] = value;
+      const kebab = property.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+      element.style.setProperty(kebab, value);
 
       // Announce style changes to screen readers for major changes
       const announceable = ['fontSize', 'fontWeight', 'fontFamily'];
