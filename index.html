@@ -60,18 +60,12 @@
   "https://fonts.bunny.net/grenze/files/grenze-latin-900-normal.woff2"},
     "grenze-black-italic": {"name": "Grenze Black Italic", "family": "grenze-black-italic",
   "weightValue": "900", "weightName": "Black", "style": "italic", "url":
-  "https://fonts.bunny.net/grenze/files/grenze-latin-900-italic.woff2"}
-  }
+  "https://fonts.bunny.net/grenze/files/grenze-latin-900-italic.woff2"},
+  "big-shoulders-stencil-display-thin": {"name": "Big Shoulders Stencil Display Thin","family": "big-shoulders-stencil-display-thin","weightValue": "100","weightName": "Thin","style": "normal","url": "https://fonts.bunny.net/big-shoulders-stencil-display/files/big-shoulders-stencil-display-latin-100-normal.woff2"},"big-shoulders-stencil-display-regular": {"name": "Big Shoulders Stencil Display Regular","family": "big-shoulders-stencil-display-regular","weightValue": "400","weightName": "Regular","style": "normal","url": "https://fonts.bunny.net/big-shoulders-stencil-display/files/big-shoulders-stencil-display-latin-400-normal.woff2"},"big-shoulders-stencil-display-bold": {"name": "Big Shoulders Stencil Display Bold","family": "big-shoulders-stencil-display-bold","weightValue": "700","weightName": "Bold","style": "normal","url": "https://fonts.bunny.net/big-shoulders-stencil-display/files/big-shoulders-stencil-display-latin-700-normal.woff2"},"big-shoulders-stencil-display-black": {"name": "Big Shoulders Stencil Display Black","family": "big-shoulders-stencil-display-black","weightValue": "900","weightName": "Black","style": "normal","url": "https://fonts.bunny.net/big-shoulders-stencil-display/files/big-shoulders-stencil-display-latin-900-normal.woff2"},"biorhyme-expanded-extralight": {"name": "BioRhyme Expanded ExtraLight","family": "biorhyme-expanded-extralight","weightValue": "200","weightName": "ExtraLight","style": "normal","url":"https://fonts.bunny.net/biorhyme-expanded/files/biorhyme-expanded-latin-200-normal.woff2"},"biorhyme-expanded-extrabold": {"name": "BioRhyme Expanded ExtraBold","family": "biorhyme-expanded-extrabold","weightValue": "800","weightName": "ExtraBold","style": "normal","url":"https://fonts.bunny.net/biorhyme-expanded/files/biorhyme-expanded-latin-800-normal.woff2"}
+	}
 		</script>
 
-		<script type="importmap" nonce="+HPLsMlal9QomgnTWSGTGA==">
-		  {
-			  "imports": {
-				  "font-loader": "./demo/font-loader.min.js"
-			  }
-		  }
-		  </script>
-		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="./demo/font-loader.min.js" type="module"></script>
+
 		<script nonce="+HPLsMlal9QomgnTWSGTGA==" src="./dist/font-tester-with-loader.min.js" type="module"></script>
 		<style>
 			@font-face {
@@ -152,7 +146,23 @@
 			<sample-text name="English">At last the minister stood in the pulpit. The heads of the congregation were lifted. Well, there he finally was. </sample-text>
 			<sample-text name="ABC123">ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789</sample-text>
 		</font-tester>
-		<hr>
 		<p>Example font is Bitcount Prop Double by <a href="https://www.typetr.com">Petr van Blokland</a></p>
-</body>
+		<hr>
+		<h2>Fit width</h2>
+		<font-tester data-font-load="lazy" data-font-family="big-shoulders-stencil-display-black" data-requires-all-weights="false" editable="true" font-family="big-shoulders-stencil-display-black" controls="font-size,font-style" fit-width>
+			<font-style name="Big Shoulders Thin" family="big-shoulders-stencil-display-thin" weight="100" style="normal"></font-style>
+			<font-style name="Big Shoulders Regular" family="big-shoulders-stencil-display-regular" weight="400" style="normal"></font-style>
+			<font-style name="Big Shoulders Bold" family="big-shoulders-stencil-display-bold" weight="700" style="normal"></font-style>
+			<font-style name="Big Shoulders Black" family="big-shoulders-stencil-display-black" weight="900" style="normal"></font-style>
+			<sample-text name="Swedish">Stockholm to Berlin!</sample-text>
+		</font-tester>
+		<p>Example font is Big Shoulders by <a href="https://xotype.co">Patric King</a></p>
+		<hr>
+		<font-tester data-font-load="lazy" data-font-family="biorhyme-expanded-extralight" data-requires-all-weights="false" editable="true" font-family="biorhyme-expanded-extralight" controls="font-size,font-style,letter-spacing" letter-spacing="0.03em" fit-width>
+			<font-style name="BioRhyme Expanded ExtraLight" family="biorhyme-expanded-extralight" weight="200" style="normal"></font-style>
+			<font-style name="BioRhyme Expanded ExtraBold" family="biorhyme-expanded-extrabold" weight="800" style="normal"></font-style>
+			<sample-text name="Swedish">TACOFISHBURGER</sample-text>
+		</font-tester>
+		<p>Example font is BioRhyme Expanded by <a href="https://www.aoifemooney.org">Aoife Mooney</a></p>
+	</body>
 </html>

@@ -93,6 +93,16 @@ export class FontTester extends FontTesterBase {
       display.applyStyle('direction', direction);
       this.setState({ direction });
     }
+
+    // Set initial text if sample-text-selector isn't rendered (e.g. no text-controls)
+    if (!this.query('sample-text-selector')) {
+      const firstSample = this.querySelector('sample-text');
+      if (firstSample) {
+        const text = firstSample.textContent.trim();
+        display.setText(text);
+        this.setState({ text });
+      }
+    }
   }
 
   /**
@@ -307,7 +317,7 @@ export class FontTester extends FontTesterBase {
         ` : ''}
 
         <div class="section" part="display-section">
-          <font-display font-family="${fontFamily}"></font-display>
+          <font-display font-family="${fontFamily}"${this.hasAttribute('fit-width') ? ' fit-width' : ''}></font-display>
         </div>
 
         ${enabled.opentype ? `
@@ -362,6 +372,12 @@ export class FontTester extends FontTesterBase {
       this.setState({ [e.detail.property]: e.detail.value });
     };
     this.addTrackedListener(this.shadowRoot, 'style-change', styleChangeHandler);
+
+    // Sync font-size slider when fit-width recalculates
+    const fitWidthHandler = (e) => {
+      this.query('style-controls')?.syncFontSize(e.detail.fontSize);
+    };
+    this.addTrackedListener(this.shadowRoot, 'fit-width-applied', fitWidthHandler);
 
     // Handle OpenType features
     const featuresChangeHandler = (e) => {

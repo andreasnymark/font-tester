@@ -298,6 +298,20 @@ export class StyleControls extends FontTesterBase {
     `;
   }
 
+  /**
+   * Sync the font-size slider to an externally calculated value (e.g. from fit-width).
+   * @param {number} value - Font size in px (numeric, no unit)
+   */
+  syncFontSize(value) {
+    const slider = this.query('#fontSize');
+    const display = this.query('#fontSizeValue');
+    if (!slider || !display) return;
+    const clamped = Math.min(Math.max(value, this.availableControls['font-size'].min), this.availableControls['font-size'].max);
+    slider.value = clamped;
+    slider.setAttribute('aria-valuenow', clamped);
+    display.textContent = Math.round(clamped) + 'px';
+  }
+
   attachListeners() {
     const visibleControls = this.getVisibleControls();
 

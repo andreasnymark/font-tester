@@ -53,6 +53,7 @@ const fontTesterObserver = new IntersectionObserver(
 							if ( fontDisplay ) {
 								fontDisplay.style.setProperty( config.fontFamilyProperty, fontFamily );
 								fontTesterCurrentFont.set( entry.target, fontFamily );
+								requestAnimationFrame( () => fontDisplay.recalcFitWidth?.() );
 							}
 						});
 					}
@@ -99,6 +100,7 @@ document.addEventListener( config.styleChangeEvent, ( e ) => {
 		if ( fontDisplay && e.detail.value ) {
 			fontDisplay.style.setProperty( config.fontFamilyProperty, e.detail.value );
 			fontTesterCurrentFont.set( fontTester, e.detail.value );
+			requestAnimationFrame( () => fontDisplay.recalcFitWidth?.() );
 		}
 	});
 }, true );

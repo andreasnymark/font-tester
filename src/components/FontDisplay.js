@@ -11,16 +11,21 @@ export class FontDisplay extends FontTesterBase {
   }
 
   static get observedAttributes() {
-    return ['font-family'];
+    return ['font-family', 'fit-width'];
   }
 
   connectedCallback() {
     this.render();
+    if (this.hasAttribute('fit-width')) {
+      document.fonts.ready.then(() => requestAnimationFrame(() => this.recalcFitWidth()));
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue) return;
-    this.style.setProperty('--display-font-family', newValue || 'system-ui');
+    if (name === 'font-family') {
+      this.style.setProperty('--display-font-family', newValue || 'system-ui');
+    }
   }
 
   render() {
@@ -47,7 +52,7 @@ export class FontDisplay extends FontTesterBase {
           letter-spacing: var(--text-letter-spacing, 0em);
           color: var(--text-color, #000000);
           outline: none;
-          word-wrap: break-word;
+          word-break: break-all;
           white-space: pre-wrap;
           font-feature-settings: normal;
         }
@@ -151,6 +156,37 @@ export class FontDisplay extends FontTesterBase {
         this.announceChange(`${property} changed to ${value}`);
       }
     }
+  }
+
+  /**
+   * Recalculate font size to fill the display area width.
+   * Called on fonts ready and after each font load when fit-width is set.
+   */
+  recalcFitWidth() {
+    if (!this.hasAttribute('fit-width')) return;
+    const el = this.textElement;
+    const area = this.query('.display-area');
+    if (!el || !area) return;
+
+    const cs = getComputedStyle(area);
+    const containerWidth = area.clientWidth
+      - parseFloat(cs.paddingLeft)
+      - parseFloat(cs.paddingRight);
+
+    el.style.display = 'inline-block';
+    el.style.whiteSpace = 'nowrap';
+    el.style.wordBreak = 'normal';
+    const textWidth = el.getBoundingClientRect().width;
+    el.style.display = '';
+    el.style.whiteSpace = '';
+    el.style.wordBreak = '';
+
+    if (!textWidth || !containerWidth) return;
+
+    const currentSize = parseFloat(getComputedStyle(el).fontSize);
+    const newSize = ((containerWidth - 2) / textWidth) * currentSize;
+    el.style.setProperty('font-size', newSize.toFixed(2) + 'px');
+    this.emit('fit-width-applied', { fontSize: newSize });
   }
 
   /**
