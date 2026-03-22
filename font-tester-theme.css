@@ -1,22 +1,88 @@
 /**
  * font-tester theme template
  * Copy and customise these overrides in your own stylesheet.
- * All custom properties are set on the relevant element selector so they
- * override the defaults defined inside each component's shadow root.
  *
- * ::part() selectors let you target internal elements directly.
- * Note: ::part() does not work across nested shadow roots, so target the
- * inner element (e.g. font-display, text-controls) rather than font-tester.
+ * CUSTOM PROPERTIES
+ * All custom properties must be set on font-tester itself — sub-components
+ * (font-display, style-controls, etc.) live inside font-tester's shadow DOM
+ * and cannot be targeted by descendant CSS selectors. Custom properties
+ * cascade through shadow boundaries automatically from the host element.
+ *
+ * ::part() SELECTORS
+ * Only parts that are declared or forwarded through font-tester's shadow root
+ * are reachable. font-display, style-controls, opentype-features, and
+ * var-axes-controls do not export their inner parts — style those via
+ * custom properties instead.
  */
 
-
-/* font-tester (host) */
-
 font-tester {
+
+  /* Layout */
   --container-max-width: 1200px;
   --container-padding: 20px;
   --section-gap: 30px;
-  --divider-color: #e0e0e0;
+
+  /* Display area (font-display) */
+  --display-bg: #ffffff;
+  --display-border-color: #e0e0e0;
+  --display-border-width: 1px;
+  --display-border-radius: 8px;
+  --display-padding: 40px;
+  --display-min-height: 200px;
+
+  /* Preview text (font-display) */
+  --text-color: #000000;
+  --text-font-size: 48px;
+  --text-font-weight: 400;
+  --text-line-height: 1.4;
+  --text-letter-spacing: 0em;
+  /* --display-font-family is managed internally — do not override */
+
+  /* Status indicators (font-display) */
+  --loading-color: #999;
+  --error-color: #f00;
+
+  /* Toggle buttons (text-controls) */
+  --control-bg: white;
+  --control-bg-hover: #f5f5f5;
+  --control-bg-active: #333;
+  --control-border: #e0e0e0;
+  --control-border-width: 1px;
+  --control-border-radius: 4px;
+  --control-text: #000;
+  --control-text-active: #fff;
+  --control-gap: 10px;
+
+  /* Sliders (style-controls) */
+  --slider-bg: #e0e0e0;
+  --slider-thumb-bg: #333;
+  --label-color: #333;
+  --value-color: #666;
+
+  /* Dropdowns (sample-text-selector, font-style-selector) */
+  --select-bg: white;
+  --select-border: #e0e0e0;
+  --select-border-width: 1px;
+  --select-border-hover: #333;
+  --select-border-radius: 4px;
+  --select-padding: 8px 12px;
+  --select-font-family: inherit;
+  --select-font-size: 13px;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  --select-arrow-position: right 12px center;
+
+  /* OpenType feature toggles (opentype-features) */
+  --feature-bg: white;
+  --feature-bg-hover: #f5f5f5;
+  --feature-bg-active: #333;
+  --feature-border: #e0e0e0;
+  --feature-border-width: 1px;
+  --feature-border-radius: 4px;
+  --feature-text: #000;
+  --feature-text-active: #fff;
+  --feature-gap: 12px;
+  --feature-code-font-size: 11px;
+  --feature-code-opacity: 0.6;
 
   /* OpenType features trigger button */
   --btn-bg: white;
@@ -35,158 +101,57 @@ font-tester {
   --dialog-close-color: #666;
 }
 
-/* Layout sections — container is a flex column, so order works */
+/* Layout sections — container is a flex column, use order to reposition */
 font-tester::part(controls-section) { }
-font-tester::part(display-section) { }
 font-tester::part(style-controls-section) { }
+font-tester::part(display-section) { }
+font-tester::part(var-axes-section) { }
 
+/* OpenType dialog */
 font-tester::part(features-button) { }
 font-tester::part(dialog) { }
 font-tester::part(dialog-header) { }
 font-tester::part(dialog-title) { }
 font-tester::part(close-button) { }
 
+/* text-controls — exported via exportparts */
+font-tester::part(button) { } /* all buttons */
+font-tester::part(uppercase-button) { }
+font-tester::part(direction-group) { }
+font-tester::part(ltr-button) { }
+font-tester::part(rtl-button) { }
+font-tester::part(alignment-group) { }
+font-tester::part(align-left-button) { }
+font-tester::part(align-center-button) { }
+font-tester::part(align-right-button) { }
 
-/* font-display */
+/* style-controls — exported via exportparts */
+font-tester::part(controls) { }
+font-tester::part(control-item) { } /* all items — flex row by default */
+font-tester::part(font-size-item) { }
+font-tester::part(line-height-item) { }
+font-tester::part(letter-spacing-item) { }
+font-tester::part(label) { } /* all labels */
+font-tester::part(font-size-label) { }
+font-tester::part(line-height-label) { }
+font-tester::part(letter-spacing-label) { }
+font-tester::part(slider) { } /* all sliders */
+font-tester::part(font-size-slider) { }
+font-tester::part(line-height-slider) { }
+font-tester::part(letter-spacing-slider) { }
+font-tester::part(value-display) { } /* all value readouts */
+font-tester::part(font-size-value) { }
+font-tester::part(line-height-value) { }
+font-tester::part(letter-spacing-value) { }
 
-font-tester font-display {
-  /* Display area */
-  --display-bg: #ffffff;
-  --display-border-color: #e0e0e0;
-  --display-border-width: 1px;
-  --display-border-radius: 8px;
-  --display-padding: 40px;
-  --display-min-height: 200px;
+/* var-axes-controls — exported via exportparts (generic parts only) */
+font-tester::part(axes) { }
+font-tester::part(axis-control) { }
 
-  /* Preview text */
-  --text-color: #000000;
-  --text-font-size: 48px;
-  --text-font-weight: 400;
-  --text-line-height: 1.4;
-  --text-letter-spacing: 0em;
-  /* --display-font-family is managed by font-tester-loader — avoid overriding */
+/* sample-text-selector — exported via exportparts */
+font-tester::part(sample-select) { }
 
-  /* Status states */
-  --loading-color: #999;
-  --error-color: #f00;
-}
-
-font-tester font-display::part(display-area) { }
-font-tester font-display::part(display-text) { }
-
-
-/* text-controls */
-
-font-tester text-controls {
-  --control-bg: white;
-  --control-bg-hover: #f5f5f5;
-  --control-bg-active: #333;
-  --control-border: #e0e0e0;
-  --control-border-width: 1px;
-  --control-border-radius: 4px;
-  --control-text: #000;
-  --control-text-active: #fff;
-  --control-gap: 10px;
-}
-
-font-tester text-controls::part(toolbar) { }
-font-tester text-controls::part(button) { }           /* all buttons */
-font-tester text-controls::part(uppercase-button) { }
-font-tester text-controls::part(direction-group) { }
-font-tester text-controls::part(ltr-button) { }
-font-tester text-controls::part(rtl-button) { }
-font-tester text-controls::part(alignment-group) { }
-font-tester text-controls::part(align-left-button) { }
-font-tester text-controls::part(align-center-button) { }
-font-tester text-controls::part(align-right-button) { }
-
-
-/* style-controls */
-
-font-tester style-controls {
-  --control-gap: 20px;
-  --label-color: #333;
-  --slider-bg: #e0e0e0;
-  --slider-thumb-bg: #333;
-  --value-color: #666;
-}
-
-font-tester style-controls::part(controls) { }
-font-tester style-controls::part(control-row) { }     /* all rows */
-font-tester style-controls::part(label) { }           /* all labels */
-font-tester style-controls::part(slider) { }          /* all sliders */
-font-tester style-controls::part(value-display) { }   /* all value readouts */
-
-/* Per-control parts */
-font-tester style-controls::part(font-size-row) { }
-font-tester style-controls::part(font-size-label) { }
-font-tester style-controls::part(font-size-slider) { }
-font-tester style-controls::part(font-size-value) { }
-
-font-tester style-controls::part(line-height-row) { }
-font-tester style-controls::part(line-height-label) { }
-font-tester style-controls::part(line-height-slider) { }
-font-tester style-controls::part(line-height-value) { }
-
-font-tester style-controls::part(letter-spacing-row) { }
-font-tester style-controls::part(letter-spacing-label) { }
-font-tester style-controls::part(letter-spacing-slider) { }
-font-tester style-controls::part(letter-spacing-value) { }
-
-
-/* sample-text-selector */
-
-font-tester sample-text-selector {
-  --select-bg: white;
-  --select-border: #e0e0e0;
-  --select-border-width: 1px;
-  --select-border-hover: #333;
-  --select-border-radius: 4px;
-  --select-padding: 8px 12px;
-  --select-font-family: inherit;
-  --select-font-size: 13px;
-  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  --select-arrow-position: right 12px center;
-}
-
-font-tester sample-text-selector::part(select) { }
-
-
-/* font-style-selector */
-
-font-tester font-style-selector {
-  --select-bg: white;
-  --select-border: #e0e0e0;
-  --select-border-width: 1px;
-  --select-border-hover: #333;
-  --select-border-radius: 4px;
-  --select-padding: 8px 12px;
-  --select-font-family: inherit;
-  --select-font-size: 13px;
-  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  --select-arrow-position: right 12px center;
-}
-
-font-tester font-style-selector::part(wrapper) { }
-font-tester font-style-selector::part(label) { }
-font-tester font-style-selector::part(select) { }
-
-
-/* opentype-features */
-
-font-tester opentype-features {
-  --feature-bg: white;
-  --feature-bg-hover: #f5f5f5;
-  --feature-bg-active: #333;
-  --feature-border: #e0e0e0;
-  --feature-border-width: 1px;
-  --feature-border-radius: 4px;
-  --feature-text: #000;
-  --feature-text-active: #fff;
-  --feature-gap: 12px;
-  --feature-code-font-size: 11px;
-  --feature-code-opacity: 0.6;
-}
-
-font-tester opentype-features::part(features-grid) { }
-font-tester opentype-features::part(feature-toggle) { }
+/* font-style-selector — exported via exportparts */
+font-tester::part(style-wrapper) { }
+font-tester::part(style-label) { }
+font-tester::part(style-select) { }

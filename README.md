@@ -1,3 +1,5 @@
+![Font tester web component](font-tester.gif)
+
 # font-tester
 
 Interactive web component for testing and previewing fonts. No dependencies. Built for [Fountain](https://fountain.nymarktype.co) but works anywhere.
@@ -63,6 +65,31 @@ font-tester var-axes-controls {
   --axis-gap: 20px;
 }
 ```
+
+### Fit width
+
+Add the `fit-width` attribute to automatically scale the font size so the preview text fills the full width of the display area. Useful for single-word or headline display testing.
+
+```html
+<font-tester font-family="my-font" fit-width="each">
+  <sample-text>Stockholm</sample-text>
+</font-tester>
+```
+
+The font size is calculated using the browser's layout engine, so letter-spacing, variable axes, and OpenType features are all accounted for. A 2px safety margin is applied to prevent overflow.
+
+Two modes are available via the attribute value:
+
+| Value | Behaviour |
+|---|---|
+| `each` (or bare `fit-width`) | Recalculates on every font load, including style/weight changes |
+| `once` | Fits once on the first font load, then leaves the size alone |
+
+`once` is useful when you want the initial size set automatically but still want full control of the font-size slider afterwards.
+
+If a `font-size` slider is included in `controls`, it stays in sync — it updates to show the calculated value and can still be used to manually override it. With `each`, the fit is restored on the next font change.
+
+`fit-width` works with or without `text-controls`. If `text-controls` is omitted, the first `<sample-text>` is shown directly without a dropdown.
 
 ### Initial style defaults
 

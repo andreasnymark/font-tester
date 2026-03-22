@@ -301,13 +301,14 @@ export class FontTester extends FontTesterBase {
 
         ${enabled.varAxes ? `
           <div class="section" part="var-axes-section">
-            <var-axes-controls part="var-axes-controls"></var-axes-controls>
+            <var-axes-controls part="var-axes-controls" exportparts="axes, axis-control, label, slider, value-display"></var-axes-controls>
           </div>
         ` : ''}
 
         ${enabled.styleControls.length > 0 ? `
           <div class="section" part="style-controls-section">
             <style-controls
+              exportparts="controls, control-item, font-size-item, line-height-item, letter-spacing-item, label, font-size-label, line-height-label, letter-spacing-label, slider, font-size-slider, line-height-slider, letter-spacing-slider, value-display, font-size-value, line-height-value, letter-spacing-value"
               show="${enabled.styleControls.join(', ')}"
               ${this.hasAttribute('font-size') ? `font-size="${this.sanitizeHTML(this.getAttribute('font-size'))}"` : ''}
               ${this.hasAttribute('line-height') ? `line-height="${this.sanitizeHTML(this.getAttribute('line-height'))}"` : ''}
@@ -317,7 +318,7 @@ export class FontTester extends FontTesterBase {
         ` : ''}
 
         <div class="section" part="display-section">
-          <font-display font-family="${fontFamily}"${this.hasAttribute('fit-width') ? ' fit-width' : ''}></font-display>
+          <font-display font-family="${fontFamily}"${this.hasAttribute('fit-width') ? ` fit-width="${this.sanitizeHTML(this.getAttribute('fit-width') || '')}"` : ''}></font-display>
         </div>
 
         ${enabled.opentype ? `

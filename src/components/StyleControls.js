@@ -215,7 +215,7 @@ export class StyleControls extends FontTesterBase {
           gap: var(--control-gap, 20px);
         }
 
-        .control-row {
+        .control-item {
           display: flex;
           align-items: center;
           gap: 15px;
@@ -273,7 +273,7 @@ export class StyleControls extends FontTesterBase {
         ${visibleControls.map(([key, control]) => {
           const label = this.t(control.labelKey, control.label);
           return `
-          <div class="control-row" data-control="${key}" part="control-row ${key}-row">
+          <div class="control-item" data-control="${key}" part="control-item ${key}-item">
             <label for="${control.id}" part="label ${key}-label">${this.sanitizeHTML(label)}</label>
             <input type="range"
                    part="slider ${key}-slider"
