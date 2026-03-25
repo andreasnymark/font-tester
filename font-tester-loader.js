@@ -68,6 +68,7 @@ const fontTesterObserver = new IntersectionObserver(
 );
 
 function handleWeightsInteraction( e ) {
+	if ( ! e.target?.closest ) return;
 	if ( e.target.closest( config.selectSelector ) ) return;
 
 	const fontTester = e.target.closest( config.fontTesterSelector );

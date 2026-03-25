@@ -229,7 +229,7 @@ export class OpentypeFeatures extends FontTesterBase {
     if (!grid) return;
 
     const clickHandler = (e) => {
-      const btn = e.target.closest('.feature-toggle');
+      const btn = e.target && e.target.closest ? e.target.closest('.feature-toggle') : null;
       if (!btn) return;
 
       const pressed = btn.getAttribute('aria-pressed') === 'true';
