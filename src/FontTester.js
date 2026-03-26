@@ -187,13 +187,15 @@ export class FontTester extends FontTesterBase {
 
         .container {
           display: flex;
-          flex-direction: column;
+          flex-direction: var(--container-direction, column);
+          flex-wrap: wrap;
           max-width: var(--container-max-width, 1200px);
           margin: 0 auto;
           padding: var(--container-padding, 20px);
         }
 
         .section {
+          flex: 1;
           margin-bottom: var(--section-gap, 30px);
         }
 
