@@ -53,6 +53,7 @@ const fontTesterObserver = new IntersectionObserver(
 							if ( fontDisplay ) {
 								fontDisplay.style.setProperty( config.fontFamilyProperty, fontFamily );
 								fontTesterCurrentFont.set( entry.target, fontFamily );
+								delete fontDisplay._fitWidthDone;
 								requestAnimationFrame( () => fontDisplay.recalcFitWidth?.() );
 							}
 						});
