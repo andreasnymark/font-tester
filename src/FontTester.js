@@ -197,7 +197,11 @@ export class FontTester extends FontTesterBase {
         .section {
           flex: 1;
           margin-bottom: var(--section-gap, 30px);
+          position: relative;
+          z-index: 1;
         }
+
+        [part="display-section"] { z-index: 0; }
 
         .controls-row {
           display: flex;
