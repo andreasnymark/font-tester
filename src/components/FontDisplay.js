@@ -55,6 +55,8 @@ export class FontDisplay extends FontTesterBase {
           word-break: break-all;
           white-space: pre-wrap;
           font-feature-settings: normal;
+          text-box-trim: both;
+          text-box-edge: cap alphabetic;
         }
 
 :host(.loading) .display-area::after {
