@@ -187,6 +187,88 @@ font-tester text-controls::part(button) {
 
 See `font-tester-theme.css` for the full reference.
 
+### `::part()` reference
+
+Parts can be targeted with `font-tester::part(name)` or, for nested parts, via the sub-component directly (e.g. `font-tester text-controls::part(button)`).
+
+**Sections (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `controls-section` | Controls bar (text controls, font style, OpenType) |
+| `style-controls-section` | Sliders section |
+| `var-axes-section` | Variable axes section |
+| `display-section` | Font preview area |
+
+**Text controls (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `button` | All buttons |
+| `uppercase-button` | Uppercase toggle |
+| `direction-group` | LTR/RTL radio group |
+| `alignment-group` | Alignment radio group |
+| `ltr-button` / `rtl-button` | Direction buttons |
+| `align-left-button` / `align-center-button` / `align-right-button` | Alignment buttons |
+
+**Sample text selector (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `sample-text-selector` | The `<sample-text-selector>` host |
+| `sample-select` | The `<select>` dropdown |
+
+**Font style selector (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `font-style-selector` | The `<font-style-selector>` host |
+| `style-wrapper` | Wrapper div |
+| `style-label` | Label |
+| `style-select` | The `<select>` dropdown |
+
+**OpenType features (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `opentype-features` | The `<opentype-features>` host |
+| `button` / `features-button` | Trigger button |
+| `features-panel` | Panel |
+| `features-list` | `<ul>` inside the panel |
+| `feature-item` | Each `<li>` |
+| `feature-switch` | Each switch button |
+
+**Style controls / sliders (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `control-item` | Each slider row |
+| `font-size-item` / `line-height-item` / `letter-spacing-item` | Specific rows |
+| `label` | All labels |
+| `font-size-label` / `line-height-label` / `letter-spacing-label` | Specific labels |
+| `slider` | All range inputs |
+| `font-size-slider` / `line-height-slider` / `letter-spacing-slider` | Specific sliders |
+| `value-display` | All value readouts |
+| `font-size-value` / `line-height-value` / `letter-spacing-value` | Specific readouts |
+
+**Variable axes (`font-tester::part()`)**
+
+| Part | Element |
+|---|---|
+| `var-axes-controls` | The `<var-axes-controls>` host |
+| `axis-control` | Each axis row |
+| `label` | Axis labels |
+| `slider` | Axis sliders |
+| `value-display` | Axis value readouts |
+
+Parts can also be used to hide controls that are enabled in `controls` but should not be shown in a particular instance:
+
+```css
+font-tester::part(sample-text-selector) {
+  display: none;
+}
+```
+
 ## Internationalization
 
 UI labels can be translated via an inline or external JSON file. See [FONT-TESTER-I18N-README.md](./FONT-TESTER-I18N-README.md) for setup and the full list of translation keys.
