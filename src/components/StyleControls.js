@@ -15,7 +15,7 @@ export class StyleControls extends FontTesterBase {
       labelKey: 'styleControls.fontSizeLabel',
       label: 'Font Size',
       min: 12,
-      max: 200,
+      max: 400,
       value: 48,
       step: 1,
       unit: 'px',
@@ -26,8 +26,8 @@ export class StyleControls extends FontTesterBase {
       labelKey: 'styleControls.lineHeightLabel',
       label: 'Line Height',
       min: 0.8,
-      max: 2.5,
-      value: 1.4,
+      max: 2,
+      value: 1.3,
       step: 0.1,
       unit: '',
       property: 'lineHeight'
@@ -37,7 +37,7 @@ export class StyleControls extends FontTesterBase {
       labelKey: 'styleControls.letterSpacingLabel',
       label: 'Letter Spacing',
       min: -0.1,
-      max: 0.5,
+      max: 0.1,
       value: 0,
       step: 0.01,
       unit: 'em',
@@ -207,11 +207,16 @@ export class StyleControls extends FontTesterBase {
     this.shadowRoot.innerHTML = `
       <style>
         :host {
-          display: block;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          height: 100%;
         }
 
         .controls {
           display: grid;
+          grid-auto-rows: 1fr;
+          height: 100%;
           gap: var(--control-gap, 20px);
         }
 
@@ -219,6 +224,7 @@ export class StyleControls extends FontTesterBase {
           display: flex;
           align-items: center;
           gap: 15px;
+          height: 100%;
         }
 
         label {
@@ -237,7 +243,7 @@ export class StyleControls extends FontTesterBase {
           -webkit-appearance: none;
         }
 
-        input[type="range"]:focus {
+        input[type="range"]:focus-visible {
           outline: 2px solid var(--slider-thumb-bg, #333);
           outline-offset: 2px;
         }
@@ -249,6 +255,11 @@ export class StyleControls extends FontTesterBase {
           border-radius: 50%;
           background: var(--slider-thumb-bg, #333);
           cursor: pointer;
+          transform: scale(.75);
+          transition: transform .1s ease-out;
+        }
+        input[type="range"]:hover::-webkit-slider-thumb {
+          transform: scale(1);
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -258,6 +269,11 @@ export class StyleControls extends FontTesterBase {
           background: var(--slider-thumb-bg, #333);
           cursor: pointer;
           border: none;
+          transform: scale(.75);
+          transition: transform .1s ease-out;
+        }
+        input[type="range"]:hover::-moz-range-thumb {
+          transform: scale(1);
         }
 
         .value-display {

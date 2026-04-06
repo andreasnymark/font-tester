@@ -39,11 +39,11 @@ export class TextControls extends FontTesterBase {
           transition: all 0.2s;
         }
 
-        button:hover:not(:disabled) {
+        button:hover:not(:disabled):not(.active) {
           background: var(--control-bg-hover, #f5f5f5);
         }
 
-        button:focus {
+        button:focus-visible {
           outline: 2px solid var(--control-bg-active, #333);
           outline-offset: 2px;
         }

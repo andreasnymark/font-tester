@@ -1,7 +1,8 @@
 import { FontTesterBase } from '../base.js';
 
 /**
- * Component for OpenType feature toggles
+ * Component for OpenType feature toggles.
+ * Renders a trigger button that opens a popover with pill-style switch toggles.
  * @extends FontTesterBase
  */
 export class OpentypeFeatures extends FontTesterBase {
@@ -25,11 +26,9 @@ export class OpentypeFeatures extends FontTesterBase {
   emitInitialFeatureSettings() {
     if (this.features.length === 0) return;
 
-    // Check if any features have defaults
     const hasDefaults = this.features.some(f => f.default);
     if (!hasDefaults) return;
 
-    // Emit settings for all features (including defaults)
     const settings = this.features
       .map(f => `"${f.code}" ${f.default ? 1 : 0}`)
       .join(', ');
@@ -41,7 +40,6 @@ export class OpentypeFeatures extends FontTesterBase {
    * Collect feature definitions from parent font-tester
    */
   collectFeatures() {
-    // Traverse up shadow DOM boundaries to find font-tester
     let node = this.getRootNode();
     let fontTester = null;
 
@@ -57,7 +55,6 @@ export class OpentypeFeatures extends FontTesterBase {
       }
     }
 
-    // Collect opentype-feature elements from font-tester's light DOM
     if (fontTester) {
       const featureElements = fontTester.querySelectorAll('opentype-feature');
 
@@ -75,11 +72,8 @@ export class OpentypeFeatures extends FontTesterBase {
             });
           }
         });
-        return;
       }
     }
-
-    // If no features defined, component won't render (empty)
   }
 
   /**
@@ -93,161 +87,238 @@ export class OpentypeFeatures extends FontTesterBase {
   }
 
   render() {
-    // Don't render anything if no features available
     if (this.features.length === 0) {
       this.shadowRoot.innerHTML = '';
       return;
     }
 
+    const triggerLabel = this.sanitizeHTML(this.t('fontTester.openFeaturesButton', 'OpenType Features'));
+    const triggerAriaLabel = this.sanitizeHTML(this.t('fontTester.openFeaturesAriaLabel', 'Open OpenType features'));
+    const groupAriaLabel = this.sanitizeHTML(this.t('fontTester.featuresGroupLabel', 'OpenType features'));
+
     this.shadowRoot.innerHTML = `
       <style>
         :host {
-          display: block;
+          display: inline-block;
+          position: relative;
         }
 
-        .features-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: var(--feature-gap, 12px);
-        }
+        /* ── Trigger button ── */
 
-        .feature-toggle {
-          appearance: none;
-          -webkit-appearance: none;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 12px;
-          border: var(--feature-border-width, 1px) solid var(--feature-border, #e0e0e0);
-          border-radius: var(--feature-border-radius, 4px);
-          background: var(--feature-bg, white);
-          color: var(--feature-text, #000);
+        #featuresBtn {
+          padding: var(--feature-trigger-padding, 8px 16px);
+          border: 1px solid var(--feature-trigger-border-color, #e0e0e0);
+          border-radius: var(--feature-trigger-border-radius, 4px);
+          background: var(--feature-trigger-bg, white);
+          color: var(--feature-trigger-color, #000);
           cursor: pointer;
-          transition: all 0.2s;
-          text-align: left;
+          font-size: var(--feature-trigger-font-size, 13px);
           font-family: inherit;
+          transition: background 0.2s;
         }
 
-        .feature-toggle:hover {
-          background: var(--feature-bg-hover, #f5f5f5);
+        #featuresBtn:hover {
+          background: var(--feature-trigger-bg-hover, #f5f5f5);
         }
 
-        .feature-toggle:focus-visible {
-          outline: 2px solid var(--feature-bg-active, #333);
+        #featuresBtn:focus-visible {
+          outline: 2px solid var(--feature-trigger-border-color, #e0e0e0);
           outline-offset: 2px;
         }
 
-        .feature-toggle[aria-pressed="true"] {
-          background: var(--feature-bg-active, #333);
-          color: var(--feature-text-active, #fff);
-          border-color: var(--feature-bg-active, #333);
+        /* ── Panel ── */
+
+        .features-panel {
+          display: none;
+          position: absolute;
+          top: calc(100% - 1px);
+          right: 0;
+          z-index: 100;
+          padding: var(--popover-padding, 12px);
+          border: 1px solid var(--popover-border-color, #e0e0e0);
+          border-radius: var(--popover-border-radius, 8px);
+          background: var(--popover-bg, white);
+          box-shadow: var(--popover-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
+          max-height: var(--popover-max-height, 400px);
+          overflow-y: auto;
+          min-width: var(--popover-min-width, 180px);
+          max-width: var(--popover-max-width, 280px);
         }
 
-        .feature-toggle:disabled {
-          opacity: 0.5;
+        .features-panel.is-open {
+          display: block;
+        }
+
+        /* ── Feature list ── */
+
+        .features-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: var(--feature-gap, 2px);
+        }
+
+        /* ── Switch row ── */
+
+        .feature-switch {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          width: 100%;
+          padding: var(--feature-switch-padding, 6px 8px);
+          border: none;
+          border-radius: var(--feature-switch-border-radius, 4px);
+          background: none;
+          color: var(--feature-text, #000);
+          cursor: pointer;
+          font-size: var(--feature-font-size, 13px);
+          font-family: inherit;
+          text-align: left;
+          transition: background 0.15s;
+        }
+
+        .feature-switch:hover {
+          background: var(--feature-switch-bg-hover, #f5f5f5);
+        }
+
+        .feature-switch:focus-visible {
+          outline: 2px solid var(--feature-trigger-border-color, #e0e0e0);
+          outline-offset: 2px;
+        }
+
+        .feature-switch:disabled {
+          opacity: 0.45;
           cursor: not-allowed;
         }
 
-        .feature-label {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          flex: 1;
+        /* ── Pill track ── */
+
+        .switch {
+          position: relative;
+          width: var(--switch-track-width, 32px);
+          height: var(--switch-track-height, 18px);
+          border-radius: 999px;
+          background: var(--switch-track-bg, #ccc);
+          flex-shrink: 0;
+          transition: background 0.2s;
+          order: var(--switch-order, 0);
         }
 
-        .feature-name {
-          font-size: 13px;
-          font-weight: 500;
+        .switch-knob {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: calc(var(--switch-track-height, 18px) - 4px);
+          height: calc(var(--switch-track-height, 18px) - 4px);
+          border-radius: 50%;
+          background: var(--switch-knob-bg, white);
+          transition: transform 0.2s;
         }
 
-        .feature-code {
-          font-size: var(--feature-code-font-size, 11px);
-          opacity: var(--feature-code-opacity, 0.6);
-          font-family: monospace;
+        .feature-switch[aria-checked="true"] .switch {
+          background: var(--switch-track-bg-on, var(--feature-bg-active, #333));
         }
 
-        .feature-toggle[aria-pressed="true"] .feature-code {
-          opacity: 0.8;
-        }
-
-        .feature-toggle .unsupported-badge {
-          font-size: 10px;
-          opacity: 0.5;
+        .feature-switch[aria-checked="true"] .switch-knob {
+          transform: translateX(calc(var(--switch-track-width, 32px) - var(--switch-track-height, 18px)));
         }
       </style>
 
-      <div class="features-grid" id="featuresGrid" part="features-grid" role="group" aria-label="OpenType features"></div>
+      <button id="featuresBtn" type="button" part="button features-button"
+        aria-expanded="false" aria-controls="featuresPanel"
+        aria-label="${triggerAriaLabel}">${triggerLabel}</button>
+
+      <div id="featuresPanel" class="features-panel" part="features-panel">
+        <ul class="features-list" part="features-list"
+          role="group" aria-label="${groupAriaLabel}"></ul>
+      </div>
     `;
 
     this.renderFeatures();
   }
 
-  /**
-   * Render individual feature toggles
-   */
   renderFeatures() {
-    const grid = this.query('#featuresGrid');
-    if (!grid) return;
+    const list = this.query('.features-list');
+    if (!list) return;
 
     this.features.forEach(feature => {
+      const li = document.createElement('li');
+      li.setAttribute('part', 'feature-item');
+
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'feature-toggle';
-      btn.setAttribute('part', 'feature-toggle');
-      btn.setAttribute('aria-pressed', feature.default ? 'true' : 'false');
+      btn.className = 'feature-switch';
+      btn.setAttribute('part', 'feature-switch');
+      btn.setAttribute('role', 'switch');
+      btn.setAttribute('aria-checked', feature.default ? 'true' : 'false');
       btn.dataset.code = feature.code;
       if (feature.supported === false) btn.disabled = true;
 
-      const label = document.createElement('div');
-      label.className = 'feature-label';
-
       const nameSpan = document.createElement('span');
-      nameSpan.className = 'feature-name';
       nameSpan.textContent = feature.name;
 
-      const codeSpan = document.createElement('span');
-      codeSpan.className = 'feature-code';
-      codeSpan.textContent = feature.code;
+      const track = document.createElement('span');
+      track.className = 'switch';
+      track.setAttribute('aria-hidden', 'true');
 
-      label.appendChild(nameSpan);
-      label.appendChild(codeSpan);
+      const knob = document.createElement('span');
+      knob.className = 'switch-knob';
+      track.appendChild(knob);
 
-      if (feature.supported === false) {
-        const badge = document.createElement('span');
-        badge.className = 'unsupported-badge';
-        badge.textContent = '(unsupported)';
-        label.appendChild(badge);
-      }
-
-      btn.appendChild(label);
-      grid.appendChild(btn);
+      btn.appendChild(nameSpan);
+      btn.appendChild(track);
+      li.appendChild(btn);
+      list.appendChild(li);
     });
   }
 
   attachListeners() {
-    const grid = this.query('#featuresGrid');
-    if (!grid) return;
+    const btn = this.query('#featuresBtn');
+    const panel = this.query('.features-panel');
 
-    const clickHandler = (e) => {
-      const btn = e.target && e.target.closest ? e.target.closest('.feature-toggle') : null;
-      if (!btn) return;
+    this.addTrackedListener(btn, 'click', () => {
+      const open = panel.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open);
+    });
 
-      const pressed = btn.getAttribute('aria-pressed') === 'true';
-      btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+    this.addTrackedListener(document, 'click', (e) => {
+      if (panel.classList.contains('is-open') && !e.composedPath().includes(this)) {
+        panel.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
 
+    this.addTrackedListener(document, 'keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+        panel.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    });
+
+    const list = this.query('.features-list');
+    if (!list) return;
+
+    this.addTrackedListener(list, 'click', (e) => {
+      const btn = e.target.closest('.feature-switch');
+      if (!btn || btn.disabled) return;
+
+      const checked = btn.getAttribute('aria-checked') === 'true';
+      btn.setAttribute('aria-checked', checked ? 'false' : 'true');
       this.emitFeatureSettings();
-    };
-
-    this.addTrackedListener(grid, 'click', clickHandler);
+    });
   }
 
   /**
    * Emit current feature settings as CSS font-feature-settings string
    */
   emitFeatureSettings() {
-    const buttons = this.queryAll('button[data-code]');
-    const settings = Array.from(buttons)
-      .map(btn => `"${btn.dataset.code}" ${btn.getAttribute('aria-pressed') === 'true' ? 1 : 0}`)
+    const switches = this.queryAll('button[data-code]');
+    const settings = Array.from(switches)
+      .map(btn => `"${btn.dataset.code}" ${btn.getAttribute('aria-checked') === 'true' ? 1 : 0}`)
       .join(', ');
 
     this.emit('features-change', { settings });
