@@ -147,6 +147,10 @@ export class FontDisplay extends FontTesterBase {
    * @param {string} value - CSS property value
    */
   applyStyle(property, value) {
+    if (property === 'fontSize' && this._fitWidthApplied) {
+      this._fitWidthDisabled = true;
+    }
+
     const element = this.textElement;
     if (element) {
       const kebab = property.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
@@ -168,6 +172,7 @@ export class FontDisplay extends FontTesterBase {
     const mode = this.getAttribute('fit-width');
     if (mode === null) return;
     if (mode === 'once' && this._fitWidthDone) return;
+    if (mode !== 'once' && this._fitWidthDisabled) return;
     const el = this.textElement;
     const area = this.query('.display-area');
     if (!el || !area) return;
@@ -192,6 +197,7 @@ export class FontDisplay extends FontTesterBase {
     el.style.setProperty('font-size', newSize.toFixed(2) + 'px');
     this.emit('fit-width-applied', { fontSize: newSize });
     if (mode === 'once') this._fitWidthDone = true;
+    else this._fitWidthApplied = true;
   }
 
   /**
