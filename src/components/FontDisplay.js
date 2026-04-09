@@ -177,11 +177,6 @@ export class FontDisplay extends FontTesterBase {
     const area = this.query('.display-area');
     if (!el || !area) return;
 
-    const cs = getComputedStyle(area);
-    const containerWidth = area.clientWidth
-      - parseFloat(cs.paddingLeft)
-      - parseFloat(cs.paddingRight);
-
     el.style.display = 'inline-block';
     el.style.whiteSpace = 'nowrap';
     el.style.wordBreak = 'normal';
@@ -189,6 +184,18 @@ export class FontDisplay extends FontTesterBase {
     el.style.display = '';
     el.style.whiteSpace = '';
     el.style.wordBreak = '';
+
+    const cs = getComputedStyle(area);
+    const allWidths = [
+      document.body.scrollWidth, document.documentElement.scrollWidth,
+      document.body.offsetWidth, document.documentElement.offsetWidth,
+      document.body.clientWidth, document.documentElement.clientWidth,
+    ];
+    const scrollbarWidth = Math.max(...allWidths) - Math.min(...allWidths);
+    const containerWidth = area.clientWidth
+      - parseFloat(cs.paddingLeft)
+      - parseFloat(cs.paddingRight)
+      - scrollbarWidth;
 
     if (!textWidth || !containerWidth) return;
 
