@@ -1,0 +1,26 @@
+{
+  "name": "font-tester",
+  "version": "1.4.2",
+  "description": "Vanilla Web Components for interactive font testing and preview",
+  "homepage": "https://github.com/andreasnymark/font-tester#readme",
+  "bugs": {
+    "url": "https://github.com/andreasnymark/font-tester/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreasnymark/font-tester.git"
+  },
+  "license": "MIT",
+  "author": "Andreas Nymark",
+  "type": "commonjs",
+  "main": "font-tester.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:components && npm run build:with-loader",
+    "build:components": "esbuild src/index.js --bundle --format=esm --minify --outfile=dist/font-tester.min.js",
+    "build:with-loader": "esbuild font-tester.js --bundle --format=esm --minify --alias:font-loader=./font-loader.js --outfile=dist/font-tester-with-loader.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}
