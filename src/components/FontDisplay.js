@@ -186,12 +186,7 @@ export class FontDisplay extends FontTesterBase {
     el.style.wordBreak = '';
 
     const cs = getComputedStyle(area);
-    const allWidths = [
-      document.body.scrollWidth, document.documentElement.scrollWidth,
-      document.body.offsetWidth, document.documentElement.offsetWidth,
-      document.body.clientWidth, document.documentElement.clientWidth,
-    ];
-    const scrollbarWidth = Math.max(...allWidths) - Math.min(...allWidths);
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     const containerWidth = area.clientWidth
       - parseFloat(cs.paddingLeft)
       - parseFloat(cs.paddingRight)
