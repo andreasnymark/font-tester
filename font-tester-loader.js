@@ -109,7 +109,9 @@ document.addEventListener( config.styleChangeEvent, ( e ) => {
 
 function init() {
 	document.querySelectorAll( config.fontTesterSelector ).forEach( tester => {
-		fontTesterObserver.observe( tester );
+		if ( tester.dataset.fontFamily ) {
+			fontTesterObserver.observe( tester );
+		}
 	});
 }
 
